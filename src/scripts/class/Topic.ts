@@ -2,6 +2,6 @@ export interface Topic {
   topicUri: string
   p: number
   pos: number
-  pageYOffset: number
+  scrollY: number
   t: number
 }

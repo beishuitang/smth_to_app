@@ -9,7 +9,7 @@ class Storage {
   topicTableName = 'topic'
   initDB = () => {
     return new Promise<void>((resolve, reject) => {
-      const idbOpenRequest = indexedDB.open('MySmthScriptDatabase')
+      const idbOpenRequest = indexedDB.open('newsmthScriptDatabase')
       idbOpenRequest.onerror = () => {
         reject('failed to open indexedDB')
       }

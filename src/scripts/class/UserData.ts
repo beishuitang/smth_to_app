@@ -30,9 +30,7 @@ export class UserData {
     }
   }
   static mergeUserData(target: UserData, newUserData: UserData) {
-    if (target.id !== newUserData.id) {
-      console.error('can not merge UserData with diffent IDs')
-    }
+    if (target.id !== newUserData.id) return
     // UserData.mergeTags(target, newUserData.tags)
     UserData.mergeUserState(target, newUserData)
   }
