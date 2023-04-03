@@ -14,22 +14,25 @@ const props = defineProps<{
 const saveUserData = useUsersDataStore().saveUserData
 const idData = useUsersDataStore().getUserById(props.userId)
 const tags: UserTags = idData.tags
-// eslint-disable-next-line @typescript-eslint/no-empty-function
 const tagName = ref('')
 const currentScore = computed(() => {
   return tags[tagName.value]?.tagUris[props.articleUri]
 })
 const currentTags = computed(() => {
-  let result = ''
+  return JSON.stringify(currentTagsObject.value).replace(/\{|\}/g, '')
+})
+type tagsObject = { [key: string]: number }
+const currentTagsObject = computed(() => {
+  const result: tagsObject = {}
   for (const tagName in tags) {
     if (Object.prototype.hasOwnProperty.call(tags, tagName)) {
       const tag = tags[tagName]
       if (Object.prototype.hasOwnProperty.call(tag.tagUris, props.articleUri)) {
-        result += tagName + ':' + tag.tagUris[props.articleUri] + ' '
+        result[tagName] = tag.tagUris[props.articleUri]
       }
     }
   }
-  return result.trim()
+  return result
 })
 function modify(step: number) {
   UserData.addModify(idData, tagName.value, step, props.articleUri)
@@ -41,9 +44,8 @@ function modify(step: number) {
     articleUri: props.articleUri,
     content: props.content,
     id: props.userId,
-    t: new Date().getTime(),
-    //TODO
-    tags: {}
+    t: Date.now(),
+    tags: currentTagsObject.value
   })
 }
 function del() {

@@ -71,12 +71,11 @@ export class UserData {
     } else if (tempScore < -MAX_SCORE) {
       diff = -tagUris[articleUri] - MAX_SCORE
       tagUris[articleUri] = -MAX_SCORE
-    } else if (tempScore === 0) {
-      this.del(target, tagName, articleUri)
     } else {
       tagUris[articleUri] = tempScore
     }
     target.tags[tagName].score += diff
+    if (tempScore === 0) this.del(target, tagName, articleUri)
     target.score += diff
     return target
   }

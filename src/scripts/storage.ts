@@ -41,12 +41,11 @@ class Storage {
     })
   }
   saveAllUserData = (usersData: UserData[]) => {
-    //TODO
-    const idbRequest = this.DB.transaction([this.userTableName], 'readwrite').objectStore(
-      this.userTableName
-    )
-    usersData.forEach((userData) => {
-      idbRequest.put(userData)
+    return new Promise<number>((resolve, reject) => {
+      const idbObjectStore = this.DB.transaction([this.userTableName], 'readwrite').objectStore(
+        this.userTableName
+      )
+      putOneByOne(idbObjectStore, usersData, resolve, reject)
     })
   }
   getUserDataById = (id: string) => {
@@ -85,11 +84,11 @@ class Storage {
     })
   }
   saveAllArticle = (articles: Article[]) => {
-    const idbRequest = this.DB.transaction([this.articleTableName], 'readwrite').objectStore(
-      this.articleTableName
-    )
-    articles.forEach((article) => {
-      idbRequest.put(article)
+    return new Promise<number>((resolve, reject) => {
+      const idbObjectStore = this.DB.transaction([this.articleTableName], 'readwrite').objectStore(
+        this.articleTableName
+      )
+      putOneByOne(idbObjectStore, articles, resolve, reject)
     })
   }
   getArticleByUri = (uri: string) => {
@@ -133,6 +132,27 @@ class Storage {
       idbRequest.onerror = reject
       idbRequest.onsuccess = resolve
     })
+  }
+}
+function putOneByOne(
+  idbObjectStore: IDBObjectStore,
+  data: unknown[],
+  resolve: (value: number | PromiseLike<number>) => void,
+  reject: () => void
+) {
+  const max = data.length
+  singlePut(0)
+  function singlePut(index: number) {
+    const idbRequest = idbObjectStore.put(data[index])
+    idbRequest.onsuccess = () => {
+      index++
+      if (index < max) {
+        singlePut(index)
+      } else {
+        resolve(index)
+      }
+    }
+    idbRequest.onerror = reject
   }
 }
 const storage: Storage = new Storage()

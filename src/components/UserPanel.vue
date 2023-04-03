@@ -2,10 +2,8 @@
 import { useAppStateStore } from '@/stores/appStateStore'
 import { useUsersDataStore } from '@/stores/usersDataStore'
 import type { UsersData } from '@/scripts/class/UserData'
-import { watch, reactive, computed } from 'vue'
+import { reactive, computed } from 'vue'
 import SingleUser from './SingleUser.vue'
-import SettingPanel from './SettingPanel.vue'
-import MenuSetting from './MenuSetting.vue'
 const filter = reactive({
   searchText: '',
   score: 0
@@ -13,12 +11,6 @@ const filter = reactive({
 
 const usersData = useUsersDataStore().usersData
 let showState = useAppStateStore().appState.showState
-watch(
-  () => showState.showPanel,
-  (showPanel) => {
-    switchPanel(showPanel ? 'show' : 'hide')
-  }
-)
 const filteredUsersData = computed(() => {
   let result = {} as UsersData
   let reg = new RegExp(filter.searchText, 'ig')
@@ -44,21 +36,13 @@ const filteredUsersData = computed(() => {
   })
   return result
 })
-
-function switchPanel(opration: 'show' | 'hide') {
-  const classList = document.querySelector('#smth_mark_id_panel')?.classList
-  if (opration == 'hide') {
-    classList?.remove('display')
-  } else {
-    classList?.add('display')
-  }
-}
 </script>
 <template>
-  <!-- <transition name="slide-right"> -->
-  <div style="height: 100%; min-width: 13rem" id="smth_mark_id_panel">
-    <SettingPanel />
-    <MenuSetting />
+  <div
+    style="height: 100%; min-width: 13rem"
+    id="smth_mark_id_panel"
+    :class="{ display: showState.showPanel }"
+  >
     <div>
       <SingleUser
         class="border"
@@ -76,10 +60,8 @@ function switchPanel(opration: 'show' | 'hide') {
         <option value="0">全部</option>
         <option value="-1">负分</option>
       </select>
-      <button @click="showState.showSetting = !showState.showSetting">设置</button>
     </div>
   </div>
-  <!-- </transition> -->
 </template>
 
 <style scoped>

@@ -7,6 +7,7 @@ export default {
   cssConfig: {
     fontSize: 12
   },
+  longSwipeDistance: 200,
   frameConfig: {
     component: [
       { el: '#top_head', name: '顶部', show: true },

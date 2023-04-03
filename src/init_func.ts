@@ -1,5 +1,6 @@
 import appContainer from './scripts/appContainer'
 import UserPanelVue from './components/UserPanel.vue'
+import MenuSettingVue from './components/MenuSetting.vue'
 import cssUtils from './scripts/cssUtils'
 import eventHandler from './scripts/eventHandler'
 import smthScriptConfig from './scripts/smthScriptConfig'
@@ -31,17 +32,20 @@ export default {
     cssUtils.init()
     eventHandler.handleInputEvent()
     this.listen()
-    this.addPanel()
+    this.addMenuAndPanel()
     window.Android === undefined && keepAlive(20)
   },
-  addPanel: function () {
+  addMenuAndPanel: function () {
     setTimeout(() => {
       if (this.dbPrepared) {
+        const menuDiv = document.createElement('div')
+        appContainer.getApp(MenuSettingVue).mount(menuDiv)
+        document.querySelector('#menu')?.appendChild(menuDiv)
         const panelDiv = document.createElement('div')
         appContainer.getApp(UserPanelVue).mount(panelDiv)
         document.body.appendChild(panelDiv)
       } else {
-        this.addPanel()
+        this.addMenuAndPanel()
       }
     }, 10)
   },
@@ -49,9 +53,6 @@ export default {
     window.addEventListener('hashchange', () => {
       this.appStateStore.onHashChange()
     })
-    // window.addEventListener('scroll', () => {
-    // this.appStateStore.scrollY = { hash: location.hash, scrollY: window.scrollY }
-    // })
     const mutConfig = {
       attributes: false,
       childList: true,
@@ -72,11 +73,11 @@ export default {
     } else if (notices.length == 2) {
       notices[1].innerHTML = notices[0].innerHTML
     }
+    this.bodyElement.style.display = 'block'
     const hashScrollY = this.appStateStore.scrollY
     if (hashScrollY.hash === location.hash) {
       window.scrollTo({ top: hashScrollY.scrollY, behavior: 'auto' })
-      hashScrollY.hash = ''
+      // hashScrollY.hash = ''
     }
-    this.bodyElement.style.display = 'block'
   }
 }

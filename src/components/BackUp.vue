@@ -33,12 +33,12 @@ function prepareData() {
   if (!state.showExport) {
     return
   }
-  storage.getAllUserData()
-    .then(
-      (usersData: UserData[]) => {
-        backupData.usersData = usersData
-        return storage.getAllArticles()
-      })
+  storage
+    .getAllUserData()
+    .then((usersData: UserData[]) => {
+      backupData.usersData = usersData
+      return storage.getAllArticles()
+    })
     .then((articles: Article[]) => {
       backupData.articles = articles
       state.prepared = true
@@ -67,8 +67,19 @@ function importBackup(backup: Backup) {
   //   }
   // }
   // storage.saveAllUserData(users);
-  storage.saveAllArticle(backup.articles)
-  storage.saveAllUserData(backup.usersData)
+  storage
+    .saveAllArticle(backup.articles)
+    .then(() => {
+      return storage.saveAllUserData(backup.usersData)
+    })
+    .then(() => {
+      alert('导入完成')
+      window.location.reload()
+    })
+    .catch(() => {
+      alert('导入失败')
+      window.location.reload()
+    })
 }
 function mergeBackupData() {
   const el = document.querySelector<HTMLInputElement>('input#newsmth_backup')
@@ -93,18 +104,6 @@ function mergeBackupData() {
 interface Backup {
   usersData: UserData[]
   articles: Article[]
-  // marks: {
-  //   [uri: string]: {
-  //     id: string;
-  //     m: string;
-  //     p: string;
-  //     tags: {
-  //       [tag: string]: {
-  //         score: number;
-  //       };
-  //     };
-  //   };
-  // };
 }
 </script>
 <template>
@@ -113,11 +112,11 @@ interface Backup {
     <button @click="state.showImport = !state.showImport">导入备份</button>
     <button @click="prepareData()" :disabled="state.showExport && !state.prepared">导出备份</button>
     <br />
-    <div v-if="state.showImport">
+    <div v-if="state.showImport" class="border-dotted">
       <input type="file" name="file" multiple accept="application/json" id="newsmth_backup" />
       <button @click="mergeBackupData()">导入数据</button>
     </div>
-    <div v-if="state.showExport">
+    <div v-if="state.showExport" class="border-dotted">
       <span v-show="!state.prepared">准备数据中......</span>
       <a v-show="state.prepared" @click="saveBackup()">获取数据完成,点击下载</a>
     </div>
@@ -127,5 +126,9 @@ interface Backup {
 <style scoped>
 a {
   text-decoration: underline;
+}
+
+.border-dotted {
+  border: dotted;
 }
 </style>

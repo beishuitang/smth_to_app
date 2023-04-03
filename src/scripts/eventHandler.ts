@@ -1,7 +1,6 @@
 import { useAppStateStore } from '@/stores/appStateStore'
 import appContainer from './appContainer'
 import config from './smthScriptConfig'
-import menuUtils from "@/scripts/menuUtils";
 
 const appStore = useAppStateStore(appContainer.pinia)
 export default {
@@ -38,7 +37,7 @@ function verticalSwipe(direction: 'up' | 'down', long = false) {
     if (link === null) return
     const hashScrollY = appStore.scrollY
     window.APP.body.open(link)
-    hashScrollY.hash = location.hash //TODO
+    hashScrollY.hash = location.hash
     hashScrollY.scrollY = direction === 'up' ? 0 : 10000
   } else {
     appStore.stepOut(location.hash)
@@ -90,42 +89,39 @@ function listenEvent(target: HTMLElement | Window | Document) {
 function handleClickEvent(event: Event) {
   const el = event.target
   if (!(el instanceof HTMLElement)) return
-  if (el.id === 'u_login_submit') {
-    window.SESSION.trigger('logout')
-  } else if (el.id === 'u_login_cookie' && el instanceof HTMLInputElement) {
-    menuUtils.savePassword(el.checked);
-  } else {
-    let link: HTMLAnchorElement | undefined
-    const path = event.composedPath()
-    const length = Math.min(path.length, 3)
-    for (let index = 0; index < length; index++) {
-      const element = path[index]
-      if (element instanceof HTMLAnchorElement) link = element
+  let link: HTMLAnchorElement | undefined
+  const path = event.composedPath()
+  const length = Math.min(path.length, 3)
+  for (let index = 0; index < length; index++) {
+    const element = path[index]
+    if (element instanceof HTMLAnchorElement) {
+      link = element
+      break
     }
-    //todo target=_blank
-    if (
-      link === undefined ||
-      link.target === '_blank' ||
-      link.host !== config.host ||
-      link.href.endsWith('.json')
-    ) return
-
-    event.preventDefault()
-    event.stopImmediatePropagation()
-    appStore.getTopicByUri(link.href, (topic) => {
-      const postFix = topic === undefined ? '' : `?p=${topic.p}`
-      const hashScrollY = appStore.scrollY
-      hashScrollY.scrollY = topic === undefined ? 0 : topic.scrollY
-      link instanceof HTMLAnchorElement &&
-        (link.href = link.href + postFix) &&
-        window.APP.body.open(link)
-      hashScrollY.hash = location.hash
-    })
   }
+  if (
+    link === undefined ||
+    link.target === '_blank' ||
+    link.host !== config.host ||
+    // link.href.endsWith('.json') ||
+    !link.href.match(/nForum\/article\/([\w.]+)\/(\d+)$/)
+  )
+    return
+
+  event.preventDefault()
+  event.stopImmediatePropagation()
+  appStore.getTopicByUri(link.href, (topic) => {
+    const postFix = topic === undefined ? '' : `?p=${topic.p}`
+    const hashScrollY = appStore.scrollY
+    hashScrollY.scrollY = topic === undefined ? 0 : topic.scrollY
+    link instanceof HTMLAnchorElement &&
+      (link.href = link.href + postFix) &&
+      window.APP.body.open(link)
+    hashScrollY.hash = location.hash
+  })
 }
 
 type direction = 'up' | 'down' | 'left' | 'right'
-const longSwipeDistance = 200 //TODO设置
 const angle = Math.PI / 4
 function atBottom() {
   return window.scrollY + window.innerHeight + 2 > document.body.clientHeight
@@ -173,7 +169,7 @@ function handleTouchEvent(event: TouchEvent) {
       atan2 = Math.atan2(spanY, spanX)
       distance = Math.abs(spanX) + Math.abs(spanY)
       if (distance < 30) return
-      long = distance > longSwipeDistance
+      long = distance > config.longSwipeDistance
       if (angle >= atan2 && atan2 > -angle) {
         swipe('right', long)
       } else if (angle * 3 >= atan2 && atan2 > angle) {

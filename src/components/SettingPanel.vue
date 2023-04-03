@@ -1,24 +1,30 @@
 <script lang="ts" setup>
-import { useConfigStore } from '@/stores/configStore'
+import smthScriptConfig from '@/scripts/smthScriptConfig'
 import { useAppStateStore } from '@/stores/appStateStore'
-import { watch } from 'vue'
+import { watch, reactive } from 'vue'
 import BackUp from './BackUp.vue'
-let showState = useAppStateStore().appState.showState
-const config = useConfigStore().config
+const showState = useAppStateStore().appState.showState
+const config = reactive(smthScriptConfig)
 const { mainpageConfig, cssConfig, frameConfig, simplifyConfig } = config
-watch(config, () => {
+const originFontSize = cssConfig.fontSize
+watch(() => cssConfig.fontSize, setBaseFontSize)
+function apply() {
   config.saveConfig()
-})
-watch(
-  () => cssConfig.fontSize,
-  (fontSize) => {
-    const style = document.querySelector('html')?.style
-    style != undefined && style.setProperty('font-size', fontSize + 'px')
+  window.Android ? window.Android.reload() : window.location.reload()
+}
+function cancle() {
+  showState.showSetting = !showState.showSetting
+  if (originFontSize !== cssConfig.fontSize) {
+    cssConfig.fontSize = originFontSize
+    setBaseFontSize(originFontSize)
   }
-)
+}
+function setBaseFontSize(fontSize: number) {
+  document.querySelector('html')?.style.setProperty('font-size', fontSize + 'px')
+}
 </script>
 <template>
-  <div id="setting" v-if="showState.showSetting" style="width: fit-content; height: fit-content">
+  <div id="setting">
     <div>
       <div>
         <h3>显示</h3>
@@ -39,6 +45,11 @@ watch(
       </div>
       <br />
       <div>
+        <h3>定义长滑动:</h3>
+        <span>滑动距离大于<input v-model="config.longSwipeDistance" type="number" />px</span>
+      </div>
+      <br />
+      <div>
         <h3>首页</h3>
         <div>
           <label v-for="el in mainpageConfig.section" :key="el.name" :class="{ checked: el.show }">
@@ -53,6 +64,7 @@ watch(
         <label :class="{ checked: simplifyConfig.simplify }">
           开启精简模式
           <input type="checkbox" v-model="simplifyConfig.simplify" />
+          <!-- <input type="checkbox" v-model="simplifyConfig.simplify" /> -->
         </label>
         <div v-if="simplifyConfig.simplify">
           <label v-for="el in simplifyConfig.func" :key="el.name" :class="{ checked: el.show }">
@@ -65,14 +77,9 @@ watch(
       <BackUp />
     </div>
 
-    <span
-      class="button"
-      @click="showState.showSetting = !showState.showSetting"
-      style="float: right"
-      >取消</span
-    >
+    <span class="button" @click="cancle" style="float: right">取消</span>
     <span> </span>
-    <span class="button" onclick="window.location.reload()" style="float: right">应用</span>
+    <span class="button" @click="apply" style="float: right">应用</span>
   </div>
 </template>
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -86,6 +93,8 @@ watch(
   background-color: #f3f5fc;
   padding: 1rem;
   z-index: 1;
+  height: 100%;
+  /* width: 100%; */
 }
 
 .button {

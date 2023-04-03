@@ -14,7 +14,6 @@ export default {
   initConfigCss() {
     this.styleSheet = document.createElement('style')
     const { mainpageConfig, cssConfig, frameConfig, simplifyConfig } = smthScriptConfig
-    // this.setHtmlFontSize(cssConfig.fontSize)
     const els = mainpageConfig.section.concat(frameConfig.component).concat(simplifyConfig.func)
     let cssText = 'html' + '{font-size:' + cssConfig.fontSize + 'px}'
     els.forEach((el) => {

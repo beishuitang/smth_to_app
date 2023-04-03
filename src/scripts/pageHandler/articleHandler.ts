@@ -8,7 +8,6 @@ const appState = useAppStateStore(appcontainer.pinia).appState
 const aImgsReg = /<a target=.*?><img.*?><\/a>/g
 export default {
   handle: function (bodyElement: HTMLElement) {
-    // fixLikeFunc();
     const els = bodyElement.querySelectorAll('.article')
     els.forEach((el, index) => {
       fnArticle(el as HTMLTableElement, index)
@@ -73,14 +72,7 @@ function fnArticle(articleElement: HTMLTableElement, index: number) {
   li.appendChild(appcontainer.appElArrs[index].userScoreEl)
   a_func.appendChild(appcontainer.appElArrs[index].modifierSwitchEl)
 }
-function fixLikeFunc() {
-  const likes = document.querySelectorAll('.add_like') as NodeListOf<HTMLElement>
-  if (likes.length == 2) {
-    likes[1].onclick = function () {
-      likes[0].click()
-    }
-  }
-}
+
 function pageArticleSimplify(p: HTMLElement) {
   const p_simple = document.createElement('p')
   p.classList.add('origin')
