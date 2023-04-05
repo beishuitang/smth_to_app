@@ -5,6 +5,7 @@ import { useAppStateStore } from '@/stores/appStateStore'
 import UserTags from './UserTags.vue'
 import TagModifier from './TagModifier.vue'
 import { computed } from 'vue'
+import UserMajias from './UserMajias.vue'
 const props = defineProps<{
   msg?: string
   articleIndex: number
@@ -17,16 +18,17 @@ const articleUri = computed(
 </script>
 
 <template>
+  <UserMajias :userData="useUsersDataStore().getUserById(articleInfo.userId)" />
   <UserTags
     :tags="useUsersDataStore().getUserById(articleInfo.userId).tags"
     v-if="useUsersDataStore().getUserById(articleInfo.userId).state.showTags"
   />
   <TagModifier
+    v-if="articleInfo.showModifier"
     :userId="articleInfo.userId"
     :articleId="articleInfo.articleId"
     :articleUri="articleUri"
     :content="articleInfo.content"
-    v-if="articleInfo.showModifier"
   />
   <!-- <MaJia :majias="idData.majias" /> -->
 </template>

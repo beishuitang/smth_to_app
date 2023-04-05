@@ -21,6 +21,6 @@ storage.getArticleByUri(props.uri as string).then((article) => {
 
 <style scoped>
 div {
-  border: double;
+  border: dashed;
 }
 </style>

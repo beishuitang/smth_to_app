@@ -1,41 +1,14 @@
 <script setup lang="ts">
 import { useAppStateStore } from '@/stores/appStateStore'
 import { useUsersDataStore } from '@/stores/usersDataStore'
-import type { UsersData } from '@/scripts/class/UserData'
-import { reactive, computed } from 'vue'
+import { reactive } from 'vue'
 import SingleUser from './SingleUser.vue'
 const filter = reactive({
   searchText: '',
   score: 0
 })
-
 const usersData = useUsersDataStore().usersData
 let showState = useAppStateStore().appState.showState
-const filteredUsersData = computed(() => {
-  let result = {} as UsersData
-  let reg = new RegExp(filter.searchText, 'ig')
-  Object.keys(usersData).forEach((userId) => {
-    let userData = usersData[userId]
-    if (userData.score * filter.score < 0) {
-      return
-    }
-    let tags = userData.tags
-    if (Object.keys(tags).length !== 0) {
-      if (userId.match(reg)) {
-        result[userId] = userData
-      } else {
-        for (const tagName in tags) {
-          if (Object.prototype.hasOwnProperty.call(tags, tagName)) {
-            if (tagName.match(reg)) {
-              result[userId] = userData
-            }
-          }
-        }
-      }
-    }
-  })
-  return result
-})
 </script>
 <template>
   <div
@@ -46,9 +19,10 @@ const filteredUsersData = computed(() => {
     <div>
       <SingleUser
         class="border"
-        v-for="(userData, id) in filteredUsersData"
+        v-for="(userData, id) in usersData"
         :key="id"
         :user-id="id"
+        :filter="filter"
       />
       <br />
     </div>

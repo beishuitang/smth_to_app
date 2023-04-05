@@ -3,10 +3,12 @@ export interface UsersData {
 }
 const MAX_SCORE = 10
 export class UserData {
+  t_m = 0
+  t_s = 0
   id: string
+  relativeIDs: string[] = []
   score = 0
   state = {
-    t: 0,
     showUser: true,
     showContent: true,
     showTags: true
@@ -35,8 +37,11 @@ export class UserData {
     UserData.mergeUserState(target, newUserData)
   }
   static mergeUserState(target: UserData, newUserData: UserData) {
-    if (target.state.t < newUserData.state.t) {
+    if (target.t_s < newUserData.t_s) {
       Object.assign(target.state, newUserData.state)
+    }
+    if (target.t_m < newUserData.t_m) {
+      target.majias = newUserData.majias
     }
   }
   static mergeTags(target: UserData, tags: UserTags) {
