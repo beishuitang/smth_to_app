@@ -26,9 +26,9 @@ const showState = props.show
 const userDataStore = useUsersDataStore()
 const userData = userDataStore.usersData[props.userId]
 const majias = userData.majias
-userData.relativeIDs = getRelativeIds()
-function getRelativeIds() {
-  let result = [userData.id]
+watch(majias, updateRelativeIds, { immediate: true })
+function updateRelativeIds() {
+  const result = [userData.id]
   for (let index = 0; index < result.length; index++) {
     const id = result[index]
     const relativeMajias = userDataStore.getUserById(id).majias
@@ -38,31 +38,36 @@ function getRelativeIds() {
     }
   }
   result.shift()
-  return result
+  userData.relativeIDs = result
 }
 const tempID = ref('')
 const showMajiaModifier = ref(false)
-const show = computed(() => {
+const showUser = computed(() => {
   if (!props.filter) {
     return true
+  }
+  if (props.filter.searchText === '') {
+    return Object.keys(userData.tags).length !== 0
   }
   let reg = new RegExp(props.filter.searchText, 'ig')
   if (userData.score * props.filter.score < 0) {
     return false
   }
+  if (userData.id.match(reg)) {
+    return true
+  }
+  if (
+    userData.relativeIDs.some((id) => {
+      return id.match(reg)
+    })
+  ) {
+    return true
+  }
   let tags = userData.tags
-  if (Object.keys(tags).length !== 0) {
-    if (userData.id.match(reg)) {
-      return true
-    } else if (userData.relativeIDs.includes(props.filter.searchText)) {
-      return true
-    } else {
-      for (const tagName in tags) {
-        if (Object.prototype.hasOwnProperty.call(tags, tagName)) {
-          if (tagName.match(reg)) {
-            return true
-          }
-        }
+  for (const tagName in tags) {
+    if (Object.prototype.hasOwnProperty.call(tags, tagName)) {
+      if (tagName.match(reg)) {
+        return true
       }
     }
   }
@@ -122,7 +127,7 @@ function delMajia(majias: string[], majia: string) {
 }
 </script>
 <template>
-  <div v-show="show">
+  <div v-show="showUser">
     <h3>
       <span v-if="showState.id"> {{ userData.id }} ({{ userData.score }}) </span>
       <span v-if="showState.majia" @click="showMajiaModifier = !showMajiaModifier">
