@@ -15,6 +15,9 @@ function swipe(direction: direction, long = false) {
     : horizontalSwipe(direction)
 }
 function verticalSwipe(direction: 'up' | 'down', long = false) {
+  if (appStore.appState.showState.showSetting || appStore.appState.showState.showPanel) {
+    return
+  }
   if (appStore.appState.mainHash === 'mainpage') {
     return
   }
