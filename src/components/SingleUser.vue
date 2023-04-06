@@ -3,6 +3,7 @@ import { useUsersDataStore } from '@/stores/usersDataStore'
 import { watch, ref, computed } from 'vue'
 import storage from '@/scripts/storage'
 import UserTags from './article/tags/UserTags.vue'
+import type { UserData } from '@/scripts/class/UserData'
 const props = defineProps<{
   show?: {
     id: boolean
@@ -26,8 +27,8 @@ const showState = props.show
 const userDataStore = useUsersDataStore()
 const userData = userDataStore.usersData[props.userId]
 const majias = userData.majias
-watch(majias, updateRelativeIds, { immediate: true })
-function updateRelativeIds() {
+updateRelativeIds(userData)
+function updateRelativeIds(userData: UserData) {
   const result = [userData.id]
   for (let index = 0; index < result.length; index++) {
     const id = result[index]
@@ -46,15 +47,12 @@ const showUser = computed(() => {
   if (!props.filter) {
     return true
   }
-  if (props.filter.searchText === '') {
-    return Object.keys(userData.tags).length !== 0
-  }
   let reg = new RegExp(props.filter.searchText, 'ig')
   if (userData.score * props.filter.score < 0) {
     return false
   }
   if (userData.id.match(reg)) {
-    return true
+    return Object.keys(userData.tags).length !== 0
   }
   if (
     userData.relativeIDs.some((id) => {
@@ -109,14 +107,23 @@ function switchUserElShowState(id: string, showUser: boolean) {
 function majiaFunc(func: 'add' | 'del') {
   const id = tempID.value.trim()
   if (id === '') return
-  const majias2 = userDataStore.getUserById(id).majias
+  const relativeUserData = userDataStore.getUserById(id)
+  const majias2 = relativeUserData.majias
   if (func === 'add') {
     addMajia(majias, id)
     addMajia(majias2, userData.id)
   } else {
     delMajia(majias, id)
     delMajia(majias2, userData.id)
+    triggerUpdateRelativeIds(relativeUserData)
   }
+  triggerUpdateRelativeIds(userData)
+}
+function triggerUpdateRelativeIds(userData: UserData) {
+  updateRelativeIds(userData)
+  userData.relativeIDs.forEach((relativeID) => {
+    updateRelativeIds(userDataStore.getUserById(relativeID))
+  })
 }
 function addMajia(majias: string[], majia: string) {
   !majias.includes(majia) && majias.push(majia)
