@@ -38,14 +38,20 @@ function savePassword(save: boolean) {
   }
 }
 function fillPassword() {
-  if (localStorage.getItem(saveConfig) == '1') {
-    const usernameEl = menuEl.querySelector<HTMLInputElement>('#u_login_id')
-    const passwordEl = menuEl.querySelector<HTMLInputElement>('#u_login_passwd')
-    if (usernameEl === null || passwordEl === null) return
-    const u = localStorage.getItem(username)
-    const p = localStorage.getItem(password)
-    usernameEl.value = u ? u : ''
-    passwordEl.value = p ? p : ''
+  const usernameEl = menuEl.querySelector<HTMLInputElement>('#u_login_id')
+  const passwordEl = menuEl.querySelector<HTMLInputElement>('#u_login_passwd')
+  const checkboxEl = document.querySelector<HTMLInputElement>("#u_login_cookie")
+  const checkInfoEl = checkboxEl?.nextElementSibling
+  if (usernameEl && passwordEl && checkboxEl && checkInfoEl) {
+    const checked = localStorage.getItem(saveConfig) == '1'
+    checkboxEl.checked = checked
+    checkInfoEl.innerHTML="保存账号密码"
+    if (checked) {
+      const u = localStorage.getItem(username)
+      const p = localStorage.getItem(password)
+      usernameEl.value = u ? u : ''
+      passwordEl.value = p ? p : ''
+    }
   }
 }
 
@@ -67,8 +73,7 @@ watch(
     <ul>
       <li class="slist folder-close">
         <span class="x-leaf">
-          <span class="toggler ico-pos-manage"></span
-          ><a v-on:click="showState.showSetting = true">设置面板</a>
+          <span class="toggler ico-pos-manage"></span><a v-on:click="showState.showSetting = true">设置面板</a>
         </span>
       </li>
     </ul>
