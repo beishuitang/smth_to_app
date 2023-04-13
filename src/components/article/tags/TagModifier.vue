@@ -36,10 +36,6 @@ const currentTagsObject = computed(() => {
 })
 function modify(step: number) {
   UserData.addModify(idData, tagName.value, step, props.articleUri)
-  if (currentScore.value === 0) {
-    del()
-  }
-  saveUserData(idData)
   storage.saveArticle({
     articleUri: props.articleUri,
     content: props.content,
@@ -47,9 +43,6 @@ function modify(step: number) {
     t: Date.now(),
     tags: currentTagsObject.value
   })
-}
-function del() {
-  UserData.del(idData, tagName.value, props.articleUri)
   saveUserData(idData)
 }
 </script>

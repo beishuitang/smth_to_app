@@ -45,28 +45,6 @@ function prepareData() {
     })
 }
 function importBackup(backup: Backup) {
-  // const users = {} as UsersData;
-  // const marks = backup.marks;
-  // for (const uri in marks) {
-  //   if (Object.prototype.hasOwnProperty.call(marks, uri)) {
-  //     const mark = marks[uri];
-  //     storage.saveArticle({ articleUri: uri, content: mark.p });
-  //     for (const tag in mark.tags) {
-  //       if (Object.prototype.hasOwnProperty.call(mark.tags, tag)) {
-  //         const score = mark.tags[tag].score;
-  //         let user;
-  //         if (Object.prototype.hasOwnProperty.call(users, mark.id)) {
-  //           user = users[mark.id];
-  //         } else {
-  //           user = new UserData(mark.id);
-  //           users[mark.id] = user;
-  //         }
-  //         UserData.addModify(user, tag, score, uri);
-  //       }
-  //     }
-  //   }
-  // }
-  // storage.saveAllUserData(users);
   storage
     .saveAllArticle(backup.articles)
     .then(() => {
