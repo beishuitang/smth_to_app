@@ -1,6 +1,7 @@
 import appcontainer from '../appContainer'
 import { useAppStateStore } from '@/stores/appStateStore'
 import { useUsersDataStore } from '@/stores/usersDataStore'
+import config from '@/scripts/smthScriptConfig'
 import ipData from '@/scripts/ipData'
 
 const usersDataStore = useUsersDataStore(appcontainer.pinia)
@@ -45,11 +46,6 @@ function fnArticle(articleElement: HTMLTableElement, index: number) {
   classList.add('simple-article')
   // a_u_name.innerHTML += ElementStr.userScoreEl
   // a_func.innerHTML += ElementStr.modifierSwitchEl
-  const li = document.createElement('li')
-  li.appendChild(a_u_sex)
-  li.appendChild(a_u_name)
-  a_func.insertBefore(li, a_func.firstChild)
-  a_func.appendChild(a_pos)
 
   const p_el = articleElement.querySelector<HTMLElement>('.a-body .a-content>p')
   if (p_el == null) return
@@ -58,8 +54,9 @@ function fnArticle(articleElement: HTMLTableElement, index: number) {
     const href = a_func_forward.href
     articleId = href.substring(href.lastIndexOf('/') + 1, href.lastIndexOf('.'))
   }
-  const content = pageArticleSimplify(p_el)
-  const ip = getPageIp(articleElement)
+  const content =
+    config.onMobile && config.simplifyConfig.simplify ? pageArticleSimplify(p_el) : p_el.innerHTML
+  const ip = config.onMobile ? getPageIp(articleElement) : ''
   Object.assign(appState.articleInfoArr[index], {
     userId: userId,
     articleId: articleId,
@@ -69,8 +66,18 @@ function fnArticle(articleElement: HTMLTableElement, index: number) {
     ipInfo: ipData.getIpInfo(ip)
   })
   a_content.insertBefore(appcontainer.appElArrs[index].userDataBundleEl, a_content.firstChild)
-  li.appendChild(appcontainer.appElArrs[index].userScoreEl)
   a_func.appendChild(appcontainer.appElArrs[index].modifierSwitchEl)
+
+  if (config.onMobile) {
+    const li = document.createElement('li')
+    li.appendChild(a_u_sex)
+    li.appendChild(a_u_name)
+    a_func.insertBefore(li, a_func.firstChild)
+    a_func.appendChild(a_pos)
+    li.appendChild(appcontainer.appElArrs[index].userScoreEl)
+  } else {
+    a_u_name.appendChild(appcontainer.appElArrs[index].userScoreEl)
+  }
 }
 
 function pageArticleSimplify(p: HTMLElement) {

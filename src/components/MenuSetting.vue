@@ -7,10 +7,11 @@ defineProps<{
 }>()
 const showState = useAppStateStore().appState.showState
 const menuEl = document.querySelector('#menu') as HTMLElement
+const loginEl = menuEl.querySelector('#u_login') as HTMLElement
 const classList = menuEl.classList
 const username = 'newsmth_script_username'
 const password = 'newsmth_script_password'
-const saveConfig = 'newsmth_script_config'
+const saveConfig = 'newsmth_script_pass_config'
 menuEl.addEventListener('click', (event) => {
   const el = event.target
   if (!(el instanceof HTMLElement)) return
@@ -19,11 +20,10 @@ menuEl.addEventListener('click', (event) => {
     hashScrollY.hash = location.hash
     hashScrollY.scrollY = window.scrollY
     window.SESSION.trigger('logout')
-  } else if (el.id === 'u_login_cookie') {
-    savePassword((el as HTMLInputElement).checked)
+    savePassword(menuEl.querySelector<HTMLInputElement>('#u_login_cookie')?.checked)
   }
 })
-function savePassword(save: boolean) {
+function savePassword(save: boolean | undefined) {
   const usernameEl = menuEl.querySelector<HTMLInputElement>('#u_login_id')
   const passwordEl = menuEl.querySelector<HTMLInputElement>('#u_login_passwd')
   if (usernameEl === null || passwordEl === null) return
@@ -40,12 +40,12 @@ function savePassword(save: boolean) {
 function fillPassword() {
   const usernameEl = menuEl.querySelector<HTMLInputElement>('#u_login_id')
   const passwordEl = menuEl.querySelector<HTMLInputElement>('#u_login_passwd')
-  const checkboxEl = document.querySelector<HTMLInputElement>("#u_login_cookie")
+  const checkboxEl = menuEl.querySelector<HTMLInputElement>('#u_login_cookie')
   const checkInfoEl = checkboxEl?.nextElementSibling
   if (usernameEl && passwordEl && checkboxEl && checkInfoEl) {
     const checked = localStorage.getItem(saveConfig) == '1'
     checkboxEl.checked = checked
-    checkInfoEl.innerHTML="保存账号密码"
+    checkInfoEl.innerHTML = '保存账号密码'
     if (checked) {
       const u = localStorage.getItem(username)
       const p = localStorage.getItem(password)
@@ -54,13 +54,20 @@ function fillPassword() {
     }
   }
 }
-
+const mutConfig = {
+  attributes: false,
+  childList: true,
+  subtree: false
+}
+new MutationObserver(() => {
+  fillPassword()
+}).observe(loginEl, mutConfig)
+fillPassword()
 watch(
   () => showState.showMenu,
   (showMenu) => {
     if (showMenu) {
       classList?.add('display')
-      fillPassword()
     } else {
       classList?.remove('display')
     }
@@ -73,7 +80,8 @@ watch(
     <ul>
       <li class="slist folder-close">
         <span class="x-leaf">
-          <span class="toggler ico-pos-manage"></span><a v-on:click="showState.showSetting = true">设置面板</a>
+          <span class="toggler ico-pos-manage"></span
+          ><a v-on:click="showState.showSetting = true">设置面板</a>
         </span>
       </li>
     </ul>
@@ -81,7 +89,7 @@ watch(
   <SettingPanel v-if="showState.showSetting" />
 </template>
 <style>
-html body #menu {
+.newsmth-plus #menu {
   float: unset;
   background-color: aliceblue;
   position: fixed;
@@ -94,30 +102,56 @@ html body #menu {
   transition: left 0.4s;
 }
 
-html body #menu.display {
+.newsmth-plus #menu.display {
   left: 0%;
 }
 
-html body #menu .ico-pos-manage {
+.newsmth-plus #menu .ico-pos-manage {
   background-position: -25.5rem -2rem;
 }
 
-html #menu .x-folder a,
-html #menu .x-leaf a {
-  padding-top: 7px;
+#menu .ico-pos-manage {
+  background-position: -255px -20px;
 }
 
-html body #xlist {
+.newsmth-plus #menu .x-folder a,
+.newsmth-plus #menu .x-leaf a {
+  line-height: 2.8rem;
+}
+
+#menu .x-folder a,
+#menu .x-leaf a {
+  line-height: 28px;
+  padding-top: unset;
+}
+
+.newsmth-plus .x-child a {
+  line-height: 1.2em;
+}
+
+#menu .toggler {
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+  margin-top: unset;
+}
+
+.newsmth-plus #xlist {
   padding: 1rem 0.8rem 0 0.8rem;
   border-bottom-width: 0;
   border-radius: 0.4rem 0.4rem 0 0;
 }
 
-#xlist-menu {
+.newsmth-plus #xlist-menu {
   padding: 0 0.8rem 1rem 0.8rem;
-  border: solid #c3d9ff;
   border-radius: 0 0 0.4rem 0.4rem;
   border-width: 0 0.1rem 0.1rem 0.1rem;
 }
+
+#xlist-menu {
+  padding: 0 8px 10px 8px;
+  border: solid #c3d9ff;
+  border-radius: 0 0 4px 4px;
+  border-width: 0 1px 1px 1px;
+}
 </style>
-//TODO

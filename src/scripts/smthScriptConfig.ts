@@ -90,7 +90,12 @@ export default {
     localStorage.setItem(this.PROJECT_CONFIG_STORAGE_KEY, JSON.stringify(this))
   },
   init() {
-    const storageConfig = localStorage.getItem(this.PROJECT_CONFIG_STORAGE_KEY) ?? '{}'
-    Object.assign(this, JSON.parse(storageConfig))
+    const str = localStorage.getItem(this.PROJECT_CONFIG_STORAGE_KEY)
+    const config = str
+      ? JSON.parse(str)
+      : {
+          onMobile: window.Android ? true : false
+        }
+    Object.assign(this, config)
   }
 }

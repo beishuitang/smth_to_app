@@ -1,0 +1,56 @@
+html {
+  -webkit-filter: unset !important;
+  filter: unset !important;
+  -moz-filter: unset !important;
+  -ms-filter: unset !important;
+  -o-filter: unset !important;
+}
+
+.single-line {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.simple img.resizeable {
+  width: unset !important;
+}
+
+.simple font.f006 {
+  /* display: none; */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  overflow: hidden;
+}
+
+.simple font.f006 ~ br,
+.simple font.f006 ~ font.f006 {
+  display: none;
+}
+
+.article p.simple {
+  display: none;
+}
+
+.article.simple-article p.simple {
+  display: unset;
+}
+
+/* .simple-article .a-head .a-func li samp.ico-pos-switch, .simple-article .a-head .a-func li samp.ico-pos-switch~a,
+  .simple-article .a-head .a-func li samp.ico-pos-reply, .simple-article .a-head .a-func li samp.ico-pos-reply~a,
+  .simple-article .a-head .a-func li samp.ico-pos-edit, .simple-article .a-head .a-func li samp.ico-pos-edit~a,
+  .simple-article .a-head .a-func li samp.ico-pos-del, .simple-article .a-head .a-func li samp.ico-pos-del~a,
+  .simple-article .a-head .a-func li samp.ico-pos-recomend, .simple-article .a-head .a-func li samp.ico-pos-recomend~a,
+  .simple-article .a-head .a-func li samp.ico-pos-forward, .simple-article .a-head .a-func li samp.ico-pos-forward~a,
+  .simple-article .a-head .a-func li samp.ico-pos-friend, .simple-article .a-head .a-func li samp.ico-pos-friend~a,
+  .simple-article .a-head .a-func li samp.ico-pos-search, .simple-article .a-head .a-func li samp.ico-pos-search~a,
+  .simple-article .a-head .a-func li samp.ico-pos-template, .simple-article .a-head .a-func li samp.ico-pos-template~a,
+  .simple-article .a-head .a-func li samp.ico-pos-user, .simple-article .a-head .a-func li samp.ico-pos-user~a, */
+.simple-article .origin {
+  display: none;
+}
+
+.modifier-hide {
+  display: none;
+}

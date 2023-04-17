@@ -1,9 +1,11 @@
-import '@/assets/pack_rem_no_link_html_prefix_font_filter.css'
-import '@/assets/fix_html_prefix.css'
-import '@/assets/nForum.css'
+import '@/assets/smth/pack_rem_no_link_html_prefix_font_filter.css'
+import '@/assets/smth/fix_html_prefix.css'
+import '@/assets/smth/nForum.css'
 import smthScriptConfig from '@/scripts/smthScriptConfig'
 export default {
   init: function () {
+    if (!smthScriptConfig.onMobile) return
+    document.body.classList.add('newsmth-plus')
     const meta = document.createElement('meta')
     meta.setAttribute('name', 'viewport')
     meta.setAttribute('content', 'width=device-width, initial-scale=1.0')
@@ -23,6 +25,7 @@ export default {
     document.head.appendChild(this.styleSheet)
   },
   pxToRem: function () {
+    if (!smthScriptConfig.onMobile) return
     const style: HTMLStyleElement | null = document.querySelector('#body>style')
     if (style == null) {
       return

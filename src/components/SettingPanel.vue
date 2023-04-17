@@ -26,6 +26,10 @@ function setBaseFontSize(fontSize: number) {
 <template>
   <div id="setting">
     <div>
+      <h3>手机模式<input type="checkbox" v-model="config.onMobile" /></h3>
+    </div>
+    <br />
+    <div v-if="config.onMobile">
       <div>
         <h3>显示</h3>
         <div>
@@ -74,9 +78,8 @@ function setBaseFontSize(fontSize: number) {
         </div>
       </div>
       <br />
-      <BackUp />
     </div>
-
+    <BackUp />
     <span class="button" @click="cancle" style="float: right">取消</span>
     <span> </span>
     <span class="button" @click="apply" style="float: right">应用</span>
@@ -92,7 +95,7 @@ function setBaseFontSize(fontSize: number) {
   margin: auto;
   background-color: #f3f5fc;
   padding: 1rem;
-  z-index: 1;
+  z-index: 10;
   height: 100%;
   /* width: 100%; */
 }
