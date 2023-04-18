@@ -80,8 +80,8 @@ watch(
     <ul>
       <li class="slist folder-close">
         <span class="x-leaf">
-          <span class="toggler ico-pos-manage"></span
-          ><a v-on:click="showState.showSetting = true">设置面板</a>
+          <span class="toggler ico-pos-manage"></span>
+          <a v-on:click="showState.showSetting = true">设置面板</a>
         </span>
       </li>
     </ul>
@@ -136,7 +136,7 @@ watch(
   margin-top: unset;
 }
 
-.newsmth-plus #xlist {
+body.newsmth-plus #xlist {
   padding: 1rem 0.8rem 0 0.8rem;
   border-bottom-width: 0;
   border-radius: 0.4rem 0.4rem 0 0;

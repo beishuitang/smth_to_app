@@ -5,6 +5,7 @@ import { watch, reactive } from 'vue'
 import BackUp from './BackUp.vue'
 const showState = useAppStateStore().appState.showState
 const config = reactive(smthScriptConfig)
+const onMobile = window.Android ? true : false
 const { mainpageConfig, cssConfig, frameConfig, simplifyConfig } = config
 const originFontSize = cssConfig.fontSize
 watch(() => cssConfig.fontSize, setBaseFontSize)
@@ -26,7 +27,7 @@ function setBaseFontSize(fontSize: number) {
 <template>
   <div id="setting">
     <div>
-      <h3>手机模式<input type="checkbox" v-model="config.onMobile" /></h3>
+      <h3>手机模式<input type="checkbox" v-model="config.onMobile" :disabled="onMobile" /></h3>
     </div>
     <br />
     <div v-if="config.onMobile">
@@ -66,11 +67,11 @@ function setBaseFontSize(fontSize: number) {
       <div>
         <h3>精简模式</h3>
         <label :class="{ checked: simplifyConfig.simplify }">
-          开启精简模式
+          精简显示帖子内容
           <input type="checkbox" v-model="simplifyConfig.simplify" />
           <!-- <input type="checkbox" v-model="simplifyConfig.simplify" /> -->
         </label>
-        <div v-if="simplifyConfig.simplify">
+        <div>
           <label v-for="el in simplifyConfig.func" :key="el.name" :class="{ checked: el.show }">
             {{ el.name }}
             <input type="checkbox" :el-css-display="el.el" v-model="el.show" />

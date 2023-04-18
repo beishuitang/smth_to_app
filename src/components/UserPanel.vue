@@ -46,7 +46,6 @@ let showState = useAppStateStore().appState.showState
   right: -100%;
   overflow-y: scroll;
   z-index: 1;
-
   -webkit-transition: right 0.5s;
   transition: right 0.5s;
 }
