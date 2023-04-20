@@ -65,11 +65,11 @@ export const useAppStateStore = defineStore('appStateStore', () => {
   function onHashChange() {
     const hash = location.hash
     const m = hash.match(mainReg)
-    if (m == null) throw new Error('main hash match failed!!!')
+    if (m == null) return
     appState.mainHash = m[1]
     if (appState.mainHash === 'article') {
       const n = hash.match(articleReg)
-      if (n == null) throw new Error('article hash match failed!!!')
+      if (n == null) return
       appState.topicState.board = n[1]
       appState.topicState.topicId = n[2]
       if (n[3] !== '?') {
