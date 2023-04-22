@@ -3,6 +3,7 @@ export interface UsersData {
 }
 const MAX_SCORE = 10
 export class UserData {
+  u? = 0 //storage timestamp
   t_m = 0
   t_s = 0
   id: string

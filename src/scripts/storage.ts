@@ -20,19 +20,29 @@ class Storage {
       idbOpenRequest.onupgradeneeded = (event) => {
         this.DB = (event.target as IDBOpenDBRequest).result
         if (!this.DB.objectStoreNames.contains(this.userTableName)) {
-          this.DB.createObjectStore(this.userTableName, { keyPath: 'id' })
+          this.DB.createObjectStore(this.userTableName, { keyPath: 'id' }).createIndex(
+            'update_time',
+            'u'
+          )
         }
         if (!this.DB.objectStoreNames.contains(this.articleTableName)) {
-          this.DB.createObjectStore(this.articleTableName, { keyPath: 'articleUri' })
+          this.DB.createObjectStore(this.articleTableName, { keyPath: 'articleUri' }).createIndex(
+            'update_time',
+            'u'
+          )
         }
         if (!this.DB.objectStoreNames.contains(this.topicTableName)) {
-          this.DB.createObjectStore(this.topicTableName, { keyPath: 'topicUri' })
+          this.DB.createObjectStore(this.topicTableName, { keyPath: 'topicUri' }).createIndex(
+            'update_time',
+            'u'
+          )
         }
       }
     })
   }
   saveUserData = (userData: UserData) => {
     return new Promise((resolve, reject) => {
+      userData.u = Date.now()
       const idbRequest = this.DB.transaction([this.userTableName], 'readwrite')
         .objectStore(this.userTableName)
         .put(userData)
@@ -76,6 +86,7 @@ class Storage {
   }
   saveArticle = (article: Article) => {
     return new Promise((resolve, reject) => {
+      article.u = Date.now()
       const idbRequest = this.DB.transaction([this.articleTableName], 'readwrite')
         .objectStore(this.articleTableName)
         .put(article)
@@ -126,6 +137,7 @@ class Storage {
   }
   saveTopic = (topic: Topic) => {
     return new Promise((resolve, reject) => {
+      topic.u = Date.now()
       const idbRequest = this.DB.transaction([this.topicTableName], 'readwrite')
         .objectStore(this.topicTableName)
         .put(topic)
@@ -136,14 +148,16 @@ class Storage {
 }
 function putOneByOne(
   idbObjectStore: IDBObjectStore,
-  data: unknown[],
+  data: UserData[] | Topic[] | Article[],
   resolve: (value: number | PromiseLike<number>) => void,
   reject: () => void
 ) {
   const max = data.length
   singlePut(0)
   function singlePut(index: number) {
-    const idbRequest = idbObjectStore.put(data[index])
+    const singleData = data[index]
+    singleData.u = Date.now()
+    const idbRequest = idbObjectStore.put(singleData)
     idbRequest.onsuccess = () => {
       index++
       if (index < max) {

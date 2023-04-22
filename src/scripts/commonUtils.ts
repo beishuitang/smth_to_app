@@ -135,7 +135,7 @@ export function rmPage1(pageHref: string) {
 export function addVisitedLinkStyle(a_el: HTMLAnchorElement, pos: number) {
   const a_href = a_el.href
   appStateStore.getTopicByUri(a_href, (info) => {
-    info = info ? info : { topicUri: '', pos: -1, p: 1, scrollY: 0, t: 0 }
+    info = info ? info : { topicUri: '', pos: -1, p: 1, scrollY: 0 }
     if (pos <= info.pos) {
       a_el.style.opacity = '0.5'
     }

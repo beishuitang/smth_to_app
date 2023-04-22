@@ -158,8 +158,7 @@ export const useAppStateStore = defineStore('appStateStore', () => {
         topicUri: m[1],
         p: parseInt(m[3] ? m[3] : '1'),
         pos: pos,
-        scrollY: window.scrollY,
-        t: 0
+        scrollY: window.scrollY
       }
       topicCache[location.href.replace(pageReg, '').replace('#!', '')] = topic
       storage.saveTopic(topic)

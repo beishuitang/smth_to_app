@@ -3,5 +3,5 @@ export interface Topic {
   p: number
   pos: number
   scrollY: number
-  t: number
+  u?: number //storage timestamp
 }
