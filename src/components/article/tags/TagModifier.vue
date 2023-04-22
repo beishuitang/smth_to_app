@@ -36,12 +36,16 @@ const currentTagsObject = computed(() => {
 })
 function modify(step: number) {
   UserData.addModify(idData, tagName.value, step, props.articleUri)
-  storage.saveArticle({
-    articleUri: props.articleUri,
-    content: props.content,
-    id: props.userId,
-    t: Date.now(),
-    tags: currentTagsObject.value
+  storage.getArticleByUri(props.articleUri).then((article) => {
+    const contents = article ? article.content : []
+    contents.includes(props.content) || contents.push(props.content)
+    storage.saveArticle({
+      articleUri: props.articleUri,
+      content: contents,
+      id: props.userId,
+      t: Date.now(),
+      tags: currentTagsObject.value
+    })
   })
   saveUserData(idData)
 }

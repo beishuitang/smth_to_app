@@ -1,21 +1,24 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { reactive } from 'vue'
 import storage from '@/scripts/storage'
 
 const props = defineProps<{
   uri: string | number
 }>()
 // const href = props.uri.toString()
-let content = ref('')
+const contents = reactive([] as string[])
 storage.getArticleByUri(props.uri as string).then((article) => {
-  content.value = article?.content as string
+  article &&
+    article.content.forEach((c) => {
+      contents.push(c)
+    })
 })
 </script>
 
 <template>
   <div>
     <!-- <a :href="href" target="_blank">{{ href }}</a> -->
-    <p v-html="content"></p>
+    <p v-for="(content, index) of contents" v-bind:key="index" v-html="content"></p>
   </div>
 </template>
 
