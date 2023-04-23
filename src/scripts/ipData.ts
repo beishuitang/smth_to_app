@@ -20,7 +20,7 @@ export default {
     if (result === undefined) {
       result = ipExtra[ip.replace(/\.[0-9]{1,3}$/, '.1')]
     }
-    result = result ? result : ip
+    // result = result ? result : ip
     ipExtra[ip] = result
     return result
   }

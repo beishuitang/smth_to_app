@@ -25,8 +25,8 @@ function updateIp() {
 </script>
 
 <template>
-  <span @click="switchUserTags">({{ score == 0 ? '' : score + ' ' }}</span>
-  <span @click="updateIp">{{ articleInfo.ipInfo }})</span>
+  <span @click="updateIp">{{ articleInfo.ipInfo ? '@' + articleInfo.ipInfo : '' }}</span>
+  <span @click="switchUserTags">({{ score == 0 ? '' : score }})</span>
 </template>
 
 <style scoped></style>

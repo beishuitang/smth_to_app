@@ -44,8 +44,9 @@ let showState = useAppStateStore().appState.showState
   bottom: 0;
   background-color: aliceblue;
   right: -100%;
+  width: 100%;
   overflow-y: scroll;
-  z-index: 1;
+  z-index: 3;
   -webkit-transition: right 0.5s;
   transition: right 0.5s;
 }
