@@ -3,6 +3,7 @@ import smthScriptConfig from '@/scripts/smthScriptConfig'
 import { useAppStateStore } from '@/stores/appStateStore'
 import { watch, reactive } from 'vue'
 import BackUp from './BackUp.vue'
+import IPDB from './IPDB.vue'
 const showState = useAppStateStore().appState.showState
 const config = reactive(smthScriptConfig)
 const onMobile = window.Android ? true : false
@@ -80,10 +81,13 @@ function setBaseFontSize(fontSize: number) {
       </div>
       <br />
     </div>
+    <IPDB />
     <BackUp />
-    <span class="button" @click="cancle" style="float: right">取消</span>
-    <span> </span>
-    <span class="button" @click="apply" style="float: right">应用</span>
+    <div style="text-align: right">
+      <span class="button" @click="apply">应用</span>
+      <span> </span>
+      <span class="button" @click="cancle">取消</span>
+    </div>
   </div>
 </template>
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -98,6 +102,7 @@ function setBaseFontSize(fontSize: number) {
   padding: 1rem;
   z-index: 10;
   height: 100%;
+  overflow: scroll;
   /* width: 100%; */
 }
 

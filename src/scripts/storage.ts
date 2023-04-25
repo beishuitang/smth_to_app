@@ -7,6 +7,8 @@ class Storage {
   userTableName = 'user'
   articleTableName = 'article'
   topicTableName = 'topic'
+  objectTableName = 'file'
+  ipFileKey = 'ipFile'
   initDB = () => {
     return new Promise<void>((resolve, reject) => {
       const idbOpenRequest = indexedDB.open('newsmthScriptDatabase')
@@ -36,6 +38,9 @@ class Storage {
             'update_time',
             'u'
           )
+        }
+        if (!this.DB.objectStoreNames.contains(this.objectTableName)) {
+          this.DB.createObjectStore(this.objectTableName)
         }
       }
     })
@@ -141,6 +146,26 @@ class Storage {
       const idbRequest = this.DB.transaction([this.topicTableName], 'readwrite')
         .objectStore(this.topicTableName)
         .put(topic)
+      idbRequest.onerror = reject
+      idbRequest.onsuccess = resolve
+    })
+  }
+  getIpDB = () => {
+    return new Promise<Blob | undefined>((resolve, reject) => {
+      const idbRequest = this.DB.transaction([this.objectTableName])
+        .objectStore(this.objectTableName)
+        .get(this.ipFileKey)
+      idbRequest.onerror = reject
+      idbRequest.onsuccess = function () {
+        resolve(idbRequest.result)
+      }
+    })
+  }
+  saveIpDB = (db: Blob) => {
+    return new Promise((resolve, reject) => {
+      const idbRequest = this.DB.transaction([this.objectTableName], 'readwrite')
+        .objectStore(this.objectTableName)
+        .put(db, this.ipFileKey)
       idbRequest.onerror = reject
       idbRequest.onsuccess = resolve
     })

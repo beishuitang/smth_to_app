@@ -1,13 +1,25 @@
 import _ipExtra from './ipExtra.json'
+import storage from '@/scripts/storage'
+import { Searcher } from './Searcher'
+import { Buffer } from 'buffer'
 const ipExtra = _ipExtra as { [key: string]: string }
 export default {
+  buffer: null as Buffer | null,
+  searcher: null as Searcher | null,
+  init: async function () {
+    const blob = await storage.getIpDB()
+    if (!blob) return
+    const ab = await this.blobToBuffer(blob)
+    this.buffer = Buffer.from(ab)
+    this.searcher = new Searcher(this.buffer)
+  },
   getIpInfo: function (ip: string) {
     if (ip === '') return ''
     ip = ip.replace('*', '1')
     let result = ipExtra[ip]
-    if (result === undefined && window.Android) {
-      const info = window.Android.getIpInfo(ip)
-      if (info !== 'null') {
+    if (result === undefined && this.searcher) {
+      const info = this.searcher.search(ip).region
+      if (info !== null) {
         const arr = info.split('|')
         if (arr[3] !== '0') {
           arr[2] = ''
@@ -23,5 +35,18 @@ export default {
     // result = result ? result : ip
     ipExtra[ip] = result
     return result
+  },
+  blobToBuffer(blob: Blob) {
+    return new Promise<ArrayBuffer>((resolve, reject) => {
+      const reader = new FileReader()
+      reader.onload = function () {
+        if (reader.result instanceof ArrayBuffer) {
+          resolve(reader.result)
+        } else {
+          reject()
+        }
+      }
+      reader.readAsArrayBuffer(blob)
+    })
   }
 }

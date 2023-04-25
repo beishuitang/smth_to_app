@@ -56,7 +56,7 @@ function fnArticle(articleElement: HTMLTableElement, index: number) {
   }
   const content =
     config.onMobile && config.simplifyConfig.simplify ? pageArticleSimplify(p_el) : p_el.innerHTML
-  const ip = config.onMobile ? getPageIp(articleElement) : ''
+  const ip = getPageIp(articleElement)
   Object.assign(appState.articleInfoArr[index], {
     userId: userId,
     articleId: articleId,

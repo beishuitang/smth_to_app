@@ -9,6 +9,7 @@ import { useUsersDataStore } from '@/stores/usersDataStore'
 import { useAppStateStore } from '@/stores/appStateStore'
 import dispatcher from './scripts/dispatcher'
 import { keepAlive } from '@/scripts/commonUtils'
+import ipData from '@/scripts/ipData'
 
 export default {
   dbPrepared: false,
@@ -21,6 +22,7 @@ export default {
       .then(this.usersDataStore.initUsersData)
       .then(() => {
         this.dbPrepared = true
+        ipData.init()
       })
     smthScriptConfig.init()
     appContainer.init()
@@ -59,12 +61,14 @@ export default {
       subtree: false
     }
     new MutationObserver(() => {
-      this.bodyMutCallback()
+      this.bodyElement.style.display = 'none'
+      setTimeout(() => {
+        this.bodyMutCallback()
+      }, 0)
     }).observe(this.bodyElement, mutConfig)
   },
   bodyMutCallback: function () {
     this.appStateStore.onBodyMut()
-    this.bodyElement.style.display = 'none'
     cssUtils.pxToRem()
     dispatcher.dispatch(this.bodyElement)
     const notices = document.querySelectorAll('#notice')
