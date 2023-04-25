@@ -89,21 +89,22 @@ watch(
   <SettingPanel v-if="showState.showSetting" />
 </template>
 <style>
-.newsmth-plus #menu {
+body.newsmth-plus #menu {
   float: unset;
   background-color: aliceblue;
   position: fixed;
-  margin: 0.2rem 0 0 0.3rem;
+  margin: 0.2rem 0 0 0;
   z-index: 100;
   bottom: 0rem;
-  left: -100%;
+  left: 0;
+  transform: translateX(-100%);
 
-  -webkit-transition: left 0.4s;
-  transition: left 0.4s;
+  -webkit-transition: transform 0.4s;
+  transition: transform 0.4s;
 }
 
 .newsmth-plus #menu.display {
-  left: 0%;
+  transform: unset;
 }
 
 .newsmth-plus #menu .ico-pos-manage {
