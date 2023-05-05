@@ -6,13 +6,13 @@ import BackUp from './BackUp.vue'
 import IPDB from './IPDB.vue'
 const showState = useAppStateStore().appState.showState
 const config = reactive(smthScriptConfig)
-const onMobile = window.Android ? true : false
+const onMobile = true
 const { mainpageConfig, cssConfig, frameConfig, simplifyConfig } = config
 const originFontSize = cssConfig.fontSize
 watch(() => cssConfig.fontSize, setBaseFontSize)
 function apply() {
   config.saveConfig()
-  window.Android ? window.Android.reload() : window.location.reload()
+  window.location.reload()
 }
 function cancle() {
   showState.showSetting = !showState.showSetting

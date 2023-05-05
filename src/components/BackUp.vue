@@ -10,23 +10,17 @@ const state = reactive({
   showDonload: false,
   prepared: false
 })
-const android = window.Android
 const backupData: Backup = { usersData: [], articles: [] }
 
 function saveBackup() {
-  let resultData = JSON.stringify(backupData)
-  if (android == undefined) {
-    const date = new Date()
-    let a = document.createElement('a')
-    a.href = window.URL.createObjectURL(
-      new Blob([JSON.stringify(backupData)], { type: 'application/json' })
-    )
-    a.download =
-      'smth' + date.getFullYear() + '_' + (date.getMonth() + 1) + '_' + date.getDate() + '.json'
-    a.click()
-  } else {
-    android.saveBackup(resultData)
-  }
+  const date = new Date()
+  let a = document.createElement('a')
+  a.href = window.URL.createObjectURL(
+    new Blob([JSON.stringify(backupData)], { type: 'application/json' })
+  )
+  a.download =
+    'smth' + date.getFullYear() + '_' + (date.getMonth() + 1) + '_' + date.getDate() + '.json'
+  a.click()
 }
 function prepareData() {
   state.showExport = !state.showExport

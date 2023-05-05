@@ -21,13 +21,6 @@ export default {
 declare global {
   interface Window {
     newsmth_script_loaded: boolean
-    Android:
-      | {
-          saveBackup: (data: string) => void
-          getIpInfo: (ip: string) => string
-          reload: () => void
-        }
-      | undefined
     SESSION: { trigger: (params: string) => void; update: (force: boolean) => void }
     APP: { body: { open: (url: HTMLAnchorElement | string, target?: string) => void } }
   }

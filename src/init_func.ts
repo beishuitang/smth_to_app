@@ -35,7 +35,7 @@ export default {
     eventHandler.handleInputEvent()
     this.listen()
     this.addMenuAndPanel()
-    window.Android === undefined && keepAlive(20)
+    keepAlive(20)
   },
   addMenuAndPanel: function () {
     setTimeout(() => {
