@@ -36,6 +36,7 @@ function prepareData() {
     .then((articles: Article[]) => {
       backupData.articles = articles
       state.prepared = true
+      saveBackup()
     })
 }
 function importBackup(backup: Backup) {
@@ -48,14 +49,14 @@ function importBackup(backup: Backup) {
       alert('导入完成')
       window.location.reload()
     })
-    .catch(() => {
-      alert('导入失败')
+    .catch((e) => {
+      alert(e)
       window.location.reload()
     })
 }
-function mergeBackupData() {
-  const el = document.querySelector<HTMLInputElement>('input#newsmth_backup')
-  if (el == null) {
+function mergeBackupData(e: Event) {
+  const el = e.target
+  if (!(el instanceof HTMLInputElement)) {
     return
   }
   const files = el.files
@@ -85,12 +86,17 @@ interface Backup {
     <button @click="prepareData()" :disabled="state.showExport && !state.prepared">导出备份</button>
     <br />
     <div v-if="state.showImport" class="border-dotted">
-      <input type="file" name="file" multiple accept="application/json" id="newsmth_backup" />
-      <button @click="mergeBackupData()">导入数据</button>
+      <input
+        type="file"
+        name="file"
+        multiple
+        accept="application/json"
+        id="newsmth_backup"
+        v-on:input="mergeBackupData"
+      />
     </div>
-    <div v-if="state.showExport" class="border-dotted">
+    <div v-if="state.showExport">
       <span v-show="!state.prepared">准备数据中......</span>
-      <a v-show="state.prepared" @click="saveBackup()">获取数据完成,点击下载</a>
     </div>
   </div>
 </template>
