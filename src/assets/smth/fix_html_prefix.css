@@ -91,35 +91,20 @@ html body.newsmth-plus {
 }
 
 .newsmth-plus .ui-state-default,
-.newsmth-plus .ui-widget-content .ui-state-default,
-.newsmth-plus .ui-widget-header .ui-state-default {
-  background-size: 1rem 40rem;
-}
-
 .newsmth-plus .ui-state-hover,
-.newsmth-plus .ui-widget-content .ui-state-hover,
-.newsmth-plus .ui-widget-header .ui-state-hover,
-.newsmth-plus .ui-state-focus,
-.newsmth-plus .ui-widget-content .ui-state-focus,
-.newsmth-plus .ui-widget-header .ui-state-focus {
+.newsmth-plus .ui-state-focus {
   background-size: 1rem 40rem;
 }
 
-.newsmth-plus .ui-state-active,
-.newsmth-plus .ui-widget-content .ui-state-active,
-.newsmth-plus .ui-widget-header .ui-state-active {
+.newsmth-plus .ui-state-active {
   background-size: 1rem 10rem;
 }
 
-.newsmth-plus .ui-state-highlight,
-.newsmth-plus .ui-widget-content .ui-state-highlight,
-.newsmth-plus .ui-widget-header .ui-state-highlight {
+.newsmth-plus .ui-state-highlight {
   background-size: 4rem 100rem;
 }
 
-.newsmth-plus .ui-state-error,
-.newsmth-plus .ui-widget-content .ui-state-error,
-.newsmth-plus .ui-widget-header .ui-state-error {
+.newsmth-plus .ui-state-error {
   background-size: 0.1rem 40rem;
 }
 
@@ -127,183 +112,36 @@ html body.newsmth-plus {
   background-size: 25.6rem 24rem;
 }
 
-.newsmth-plus .ui-widget-content .ui-icon {
-  background-size: 25.6rem 24rem;
-}
-
-.newsmth-plus .ui-widget-header .ui-icon {
-  background-size: 25.6rem 24rem;
-}
-
-.newsmth-plus .ui-state-default .ui-icon {
-  background-size: 25.6rem 24rem;
-}
-
-.newsmth-plus .ui-state-hover .ui-icon,
-.newsmth-plus .ui-state-focus .ui-icon {
-  background-size: 25.6rem 24rem;
-}
-
-.newsmth-plus .ui-state-active .ui-icon {
-  background-size: 25.6rem 24rem;
-}
-
-.newsmth-plus .ui-state-highlight .ui-icon {
-  background-size: 25.6rem 24rem;
-}
-
-.newsmth-plus .ui-state-error .ui-icon,
-.newsmth-plus .ui-state-error-text .ui-icon {
-  background-size: 25.6rem 24rem;
-}
-
-.newsmth-plus .ui-widget-overlay {
-  background-size: 4rem 10rem;
-}
-
+.newsmth-plus .ui-widget-overlay,
 .newsmth-plus .ui-widget-shadow {
   background-size: 4rem 10rem;
 }
 
-.newsmth-plus a.jp-play {
-  background-size: 20rem 40rem;
-}
-
-.newsmth-plus a.jp-play:hover {
-  background-size: 20rem 40rem;
-}
-
-.newsmth-plus a.jp-pause {
-  background-size: 20rem 40rem;
-}
-
-.newsmth-plus a.jp-pause:hover {
-  background-size: 20rem 40rem;
-}
-
-.newsmth-plus a.jp-stop {
-  background-size: 20rem 40rem;
-}
-
-.newsmth-plus a.jp-stop:hover {
-  background-size: 20rem 40rem;
-}
-
-.newsmth-plus a.jp-previous {
-  background-size: 20rem 40rem;
-}
-
-.newsmth-plus a.jp-previous:hover {
-  background-size: 20rem 40rem;
-}
-
-.newsmth-plus a.jp-next {
-  background-size: 20rem 40rem;
-}
-
-.newsmth-plus a.jp-next:hover {
-  background-size: 20rem 40rem;
-}
-
-.newsmth-plus div.jp-seek-bar {
-  background-size: 20rem 40rem;
-}
-
-.newsmth-plus div.jp-play-bar {
+.newsmth-plus a.jp-play,
+.newsmth-plus a.jp-pause,
+.newsmth-plus a.jp-stop,
+.newsmth-plus a.jp-previous,
+.newsmth-plus a.jp-next,
+.newsmth-plus div.jp-seek-bar,
+.newsmth-plus div.jp-play-bar,
+.newsmth-plus a.jp-mute,
+.newsmth-plus a.jp-unmute,
+.newsmth-plus a.jp-volume-max,
+.newsmth-plus div.jp-volume-bar,
+.newsmth-plus div.jp-volume-bar-value,
+.newsmth-plus a.jp-full-screen,
+.newsmth-plus a.jp-full-screen:hover,
+.newsmth-plus a.jp-restore-screen,
+.newsmth-plus a.jp-repeat,
+.newsmth-plus a.jp-repeat-off,
+.newsmth-plus a.jp-shuffle,
+.newsmth-plus a.jp-shuffle-off {
   background-size: 20rem 40rem;
 }
 
 .newsmth-plus div.jp-seeking-bg {
   background-size: 4.8rem 2.2rem;
 }
-
-.newsmth-plus a.jp-mute {
-  background-size: 20rem 40rem;
-}
-
-.newsmth-plus a.jp-mute:hover {
-  background-size: 20rem 40rem;
-}
-
-.newsmth-plus a.jp-unmute {
-  background-size: 20rem 40rem;
-}
-
-.newsmth-plus a.jp-unmute:hover {
-  background-size: 20rem 40rem;
-}
-
-.newsmth-plus a.jp-volume-max {
-  background-size: 20rem 40rem;
-}
-
-.newsmth-plus a.jp-volume-max:hover {
-  background-size: 20rem 40rem;
-}
-
-.newsmth-plus div.jp-volume-bar {
-  background-size: 20rem 40rem;
-}
-
-.newsmth-plus div.jp-volume-bar-value {
-  background-size: 20rem 40rem;
-}
-
-.newsmth-plus a.jp-full-screen {
-  background-size: 20rem 40rem;
-}
-
-.newsmth-plus a.jp-full-screen:hover {
-  background-size: 20rem 40rem;
-}
-
-.newsmth-plus a.jp-restore-screen {
-  background-size: 20rem 40rem;
-}
-
-.newsmth-plus a.jp-restore-screen:hover {
-  background-size: 20rem 40rem;
-}
-
-.newsmth-plus a.jp-repeat {
-  background-size: 20rem 40rem;
-}
-
-.newsmth-plus a.jp-repeat:hover {
-  background-size: 20rem 40rem;
-}
-
-.newsmth-plus a.jp-repeat-off {
-  background-size: 20rem 40rem;
-}
-
-.newsmth-plus a.jp-repeat-off:hover {
-  background-size: 20rem 40rem;
-}
-
-.newsmth-plus a.jp-shuffle {
-  background-size: 20rem 40rem;
-}
-
-.newsmth-plus a.jp-shuffle:hover {
-  background-size: 20rem 40rem;
-}
-
-.newsmth-plus a.jp-shuffle-off {
-  background-size: 20rem 40rem;
-}
-
-.newsmth-plus a.jp-shuffle-off:hover {
-  background-size: 20rem 40rem;
-}
-
-/* a.jp-video-play-icon {
-      background: url("../img/jplayer.blue.monday/jplayer.blue.monday.video.play.png") 0 0 no-repeat;
-  }
-
-  div.jp-video-play:hover a.jp-video-play-icon {
-      background: url("../img/jplayer.blue.monday/jplayer.blue.monday.video.play.png") 0 -100px no-repeat
-  } */
 
 .newsmth-plus #main {
   margin: 0.2rem 0.3rem;
@@ -355,6 +193,8 @@ html body.newsmth-plus {
 }
 
 .ad,
+.full_ad,
+#botadv_slider,
 iframe,
 #ban_ner,
 #left_adv,
@@ -381,7 +221,7 @@ iframe,
 
 .newsmth-plus span.new_mail {
   position: absolute;
-  right: -1rem;
+  right: -2rem;
 }
 
 .newsmth-plus .board-list .title_3 {
@@ -391,13 +231,6 @@ iframe,
 .newsmth-plus #mp_wrapper .mp_left,
 .newsmth-plus #mp_wrapper .mp_right {
   float: none;
-}
-
-.newsmth-plus #main .ad,
-.newsmth-plus #main .full_ad,
-.newsmth-plus #botadv_slider,
-.newsmth-plus #body #sogou_banner {
-  display: none;
 }
 
 .newsmth-plus #mp_wrapper > #hotspot,
@@ -483,4 +316,11 @@ iframe,
 
 .newsmth-plus .a-bottom {
   display: none;
+}
+
+.newsmth-plus .ui-dialog {
+  position: fixed;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%);
 }
