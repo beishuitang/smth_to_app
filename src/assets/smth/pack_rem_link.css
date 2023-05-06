@@ -1,0 +1,153 @@
+ body.newsmth-plus div.jp-audio div.jp-type-single div.jp-progress,
+ body.newsmth-plus div.jp-audio div.jp-type-single div.jp-time-holder {
+     width: 50%;
+ }
+
+ body.newsmth-plus .jp-current-time,
+ body.newsmth-plus .jp-duration {
+     width: unset;
+ }
+
+ /* a.jp-play {
+    background-position: 0 0
+} */
+
+ .newsmth-plus a.jp-play:hover {
+     background-position: -4.1rem 0
+ }
+
+ .newsmth-plus a.jp-pause {
+     background-position: 0 -4.2rem;
+ }
+
+ .newsmth-plus a.jp-pause:hover {
+     background-position: -4.1rem -4.2rem
+ }
+
+ .newsmth-plus a.jp-stop {
+     background-position: 0 -8.3rem;
+ }
+
+ .newsmth-plus a.jp-stop:hover {
+     background-position: -2.9rem -8.3rem
+ }
+
+ .newsmth-plus a.jp-previous {
+     background-position: 0 -11.2rem
+ }
+
+ .newsmth-plus a.jp-previous:hover {
+     background-position: -2.9rem -11.2rem
+ }
+
+ .newsmth-plus a.jp-next {
+     background-position: 0 -14.1rem
+ }
+
+ .newsmth-plus a.jp-next:hover {
+     background-position: -2.9rem -14.1rem
+ }
+
+ div.jp-seek-bar {
+     background-position: 0 -20.2rem;
+     background-repeat: repeat-x;
+ }
+
+ div.jp-play-bar {
+     background-position: 0 -21.8rem;
+     background-repeat: repeat-x;
+ }
+
+ /* div.jp-seeking-bg {
+    background-position:
+} */
+
+ .newsmth-plus a.jp-mute {
+     background-position: 0 -17.0rem
+ }
+
+ .newsmth-plus a.jp-mute:hover {
+     background-position: -1.9rem -17.0rem
+ }
+
+ .newsmth-plus a.jp-unmute {
+     background-position: -6.0rem -17.0rem;
+ }
+
+ .newsmth-plus a.jp-unmute:hover {
+     background-position: -7.9rem -17.0rem
+ }
+
+ .newsmth-plus a.jp-volume-max {
+     background-position: 0 -18.6rem
+ }
+
+ .newsmth-plus a.jp-volume-max:hover {
+     background-position: -1.9rem -18.6rem
+ }
+
+ div.jp-volume-bar {
+     background-position: 0 -25.0rem;
+     background-repeat: repeat-x;
+ }
+
+ div.jp-volume-bar-value {
+     background-position: 0 -25.6rem;
+     background-repeat: repeat-x;
+ }
+
+ .newsmth-plus a.jp-video-play-icon {
+     background-position: 0 0;
+ }
+
+ div.jp-video-play:hover a.jp-video-play-icon {
+     background-position: 0 -10.0rem
+ }
+
+ .newsmth-plus a.jp-full-screen {
+     background-position: 0 -31.0rem;
+ }
+
+ .newsmth-plus a.jp-full-screen:hover {
+     background-position: -3.0rem -31.0rem
+ }
+
+ .newsmth-plus a.jp-restore-screen {
+     background-position: -6.0rem -31.0rem;
+ }
+
+ .newsmth-plus a.jp-restore-screen:hover {
+     background-position: -9.0rem -31.0rem
+ }
+
+ .newsmth-plus a.jp-repeat {
+     background-position: 0 -29.0rem
+ }
+
+ .newsmth-plus a.jp-repeat:hover {
+     background-position: -3.0rem -29.0rem
+ }
+
+ .newsmth-plus a.jp-repeat-off {
+     background-position: -6.0rem -29.0rem
+ }
+
+ .newsmth-plus a.jp-repeat-off:hover {
+     background-position: -9.0rem -29.0rem
+ }
+
+ .newsmth-plus a.jp-shuffle {
+     background-position: 0 -27.0rem;
+ }
+
+ .newsmth-plus a.jp-shuffle:hover {
+     background-position: -3.0rem -27.0rem
+ }
+
+ .newsmth-plus a.jp-shuffle-off {
+     background-position: -6.0rem -27.0rem;
+ }
+
+ .newsmth-plus a.jp-shuffle-off:hover {
+     background-position: -9.0rem -27.0rem
+ }

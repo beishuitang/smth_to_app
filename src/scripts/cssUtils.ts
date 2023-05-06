@@ -1,6 +1,7 @@
 import '@/assets/smth/pack_rem_no_link_html_prefix_font_filter.css'
 import '@/assets/smth/fix_html_prefix.css'
 import '@/assets/smth/nForum.css'
+import '@/assets/smth/pack_rem_link.css'
 import smthScriptConfig from '@/scripts/smthScriptConfig'
 export default {
   init: function () {
