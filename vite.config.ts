@@ -21,7 +21,7 @@ export default defineConfig({
     //     assetFileNames: `assets/[name].[ext]`
     //   }
     // },
-    // cssCodeSplit: true,
+    cssCodeSplit: true,
     lib: {
       entry: path.resolve(__dirname, 'src/main.ts'),
       name: 'MyLib',
