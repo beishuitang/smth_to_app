@@ -32,7 +32,8 @@ export class Searcher {
 
   search(ip: string) {
     if (!isValidIp(ip)) {
-      throw new Error(`IP: ${ip} is invalid`)
+      return { region: null }
+      // throw new Error(`IP: ${ip} is invalid`)
     }
 
     const ps = ip.split('.')
