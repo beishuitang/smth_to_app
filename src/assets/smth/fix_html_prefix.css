@@ -224,6 +224,10 @@ iframe,
   right: -2rem;
 }
 
+.newsmth-plus .display span.new_mail {
+  right: unset;
+}
+
 .newsmth-plus .board-list .title_3 {
   display: none;
 }

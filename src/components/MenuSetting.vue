@@ -70,6 +70,7 @@ watch(
       classList?.add('display')
     } else {
       classList?.remove('display')
+      menuEl.querySelector<HTMLInputElement>('#b_search')?.blur()
     }
   }
 )
@@ -100,7 +101,6 @@ body.newsmth-plus #menu {
   transform: translateX(-100%);
 
   max-height: 100%;
-  overflow-y: auto;
   -webkit-transition: transform 0.4s;
   transition: transform 0.4s;
 }
