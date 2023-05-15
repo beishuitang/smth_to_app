@@ -22,6 +22,11 @@ declare global {
   interface Window {
     newsmth_script_loaded: boolean
     SESSION: { trigger: (params: string) => void; update: (force: boolean) => void }
-    APP: { body: { open: (url: HTMLAnchorElement | string, target?: string) => void } }
+    APP: {
+      body: {
+        open: (url: HTMLAnchorElement | string, target?: string) => void
+        refresh: (noCache?: boolean) => void
+      }
+    }
   }
 }

@@ -2,7 +2,7 @@ import config from '@/scripts/smthScriptConfig'
 import { splitName, relayTableAll, addVisitedLinkStyle } from '../commonUtils'
 import appContainer from '../appContainer'
 import { useUsersDataStore } from '@/stores/usersDataStore'
-
+import { fixEmptyBoard } from '@/scripts/bugHandler'
 const usersDataStore = useUsersDataStore(appContainer.pinia)
 
 // import browserUtil from '../browseUtil'
@@ -14,6 +14,10 @@ export default {
     }
     const userEls = document.querySelectorAll('#body table .title_12')
     const topicTrs = document.querySelectorAll<HTMLElement>('.board-list>tbody>tr')
+    if (topicTrs.length === 1 && topicTrs[0].firstElementChild?.innerHTML == '该版面没有任何主题') {
+      fixEmptyBoard()
+      return
+    }
     splitName(userEls)
     config.onMobile && relayTableAll(tableEl, [[3, 2]], [0, 2, 4, 5, 6, 7, 8])
     const middle = document.querySelector<HTMLElement>('.board-list>thead>tr>.middle')
