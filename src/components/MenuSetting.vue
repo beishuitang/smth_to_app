@@ -2,6 +2,7 @@
 import { useAppStateStore } from '@/stores/appStateStore'
 import { watch } from 'vue'
 import SettingPanel from './SettingPanel.vue'
+import { fixSearchBoard } from '@/scripts/bugHandler'
 defineProps<{
   msg?: string
 }>()
@@ -12,6 +13,7 @@ const classList = menuEl.classList
 const username = 'newsmth_script_username'
 const password = 'newsmth_script_password'
 const saveConfig = 'newsmth_script_pass_config'
+fixSearchBoard()
 menuEl.addEventListener('click', (event) => {
   const el = event.target
   if (!(el instanceof HTMLElement)) return
@@ -100,7 +102,6 @@ body.newsmth-plus #menu {
   left: 0;
   transform: translateX(-100%);
 
-  max-height: 100%;
   -webkit-transition: transform 0.4s;
   transition: transform 0.4s;
 }
