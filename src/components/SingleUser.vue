@@ -143,7 +143,11 @@ function delMajia(majias: string[], majia: string) {
       <input type="checkbox" v-model="userData.state.showUser" />
       <form v-if="showMajiaModifier" @submit.prevent="majiaFunc('add')">
         <button type="button" @click.prevent="majiaFunc('del')">删除</button>
-        <input type="text" v-model="tempID" :placeholder="majias.join(' ')" />
+        <input
+          type="text"
+          v-model="tempID"
+          :placeholder="majias.length == 0 ? '马甲' : majias.join(' ')"
+        />
         <button type="submit">添加</button>
       </form>
     </h3>
