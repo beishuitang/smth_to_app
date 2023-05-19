@@ -144,3 +144,20 @@ export function addVisitedLinkStyle(a_el: HTMLAnchorElement, pos: number) {
     a_el.parentNode?.insertBefore(span_el, a_el.nextSibling)
   })
 }
+let t: NodeJS.Timeout | undefined
+const message = '加载中..'
+let el: HTMLElement | null = null
+export function info(time = 0, mes = message) {
+  if (el === null) {
+    el = document.querySelector<HTMLElement>('#nforum_tips')!
+  }
+  if (time > 0) {
+    el.style.display = 'block'
+    el.innerHTML = mes
+  }
+  clearTimeout(t)
+  t = setTimeout(() => {
+    el!.style.display = 'none'
+    el!.innerHTML = message
+  }, time * 1000)
+}
