@@ -2,11 +2,12 @@
 import storage from '@/scripts/storage'
 import ipData from '@/scripts/ipData'
 import { ref, watch } from 'vue'
+import { info } from '@/scripts/commonUtils'
 const loaded = ipData.searcher ? ref(true) : ref(false)
 const showImport = ref(false)
 const autoDownload = ref(false)
 const installing = ref(false)
-const contentLength = ref(0)
+const contentLength = ref(1)
 const receivedLength = ref(0)
 watch(autoDownload, (value) => {
   if (value) {
@@ -14,6 +15,7 @@ watch(autoDownload, (value) => {
   }
 })
 function downloadIpDb() {
+  info(2000, '正在下载安装，请稍后')
   installing.value = true
   const url = 'https://www.newsmth.top/static/ipdb.xdb'
   fetch(url)
@@ -23,10 +25,19 @@ function downloadIpDb() {
     .then((blob) => {
       return saveIpDb(blob)
     })
+    .then(() => {
+      return ipData.init()
+    })
+    .then(() => {
+      loaded.value = true
+      info(2, '安装完成！')
+    })
     .catch((e) => {
+      info(3, e)
+    })
+    .finally(() => {
       installing.value = false
       autoDownload.value = false
-      alert(e)
     })
 }
 async function getBlob(response: Response) {
@@ -55,19 +66,19 @@ async function getBlob(response: Response) {
   return new Blob([chunksAll])
 }
 function importIpDb() {
+  info(100, '正在导入...')
   installing.value = true
   const files = document.querySelector<HTMLInputElement>('input#newsmth_IpDB')?.files
   if (files && files[0] && files[0].name.endsWith('.xdb')) {
     saveIpDb(files[0])
   } else {
-    alert('导入失败,请检查文件')
+    info(3, '导入失败,请检查文件是否正确！')
     installing.value = false
   }
 }
 async function saveIpDb(blob: Blob) {
   await storage.saveIpDB(blob)
-  alert('导入完成')
-  location.reload()
+  info(3, '导入完成,点击“应用”完成操作')
 }
 </script>
 <template>
@@ -88,7 +99,9 @@ async function saveIpDb(blob: Blob) {
         <input type="file" name="file" accept=".xdb" id="newsmth_IpDB" />
         <button @click="importIpDb()">导入</button>
       </div>
-      <div v-if="installing">正在下载:{{ receivedLength }} of {{ contentLength }}</div>
+      <div v-if="installing">
+        正在下载:{{ Math.floor((100 * receivedLength) / contentLength) }}%
+      </div>
     </span>
   </div>
 </template>

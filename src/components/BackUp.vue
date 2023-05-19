@@ -3,12 +3,10 @@ import { reactive } from 'vue'
 import type { UserData } from '@/scripts/class/UserData'
 import storage from '@/scripts/storage'
 import type { Article } from '@/scripts/class/Article'
+import { info } from '@/scripts/commonUtils'
 
 const state = reactive({
-  showImport: false,
-  showExport: false,
-  showDonload: false,
-  prepared: false
+  onPrepare: false
 })
 const backupData: Backup = { usersData: [], articles: [] }
 
@@ -18,15 +16,13 @@ function saveBackup() {
   a.href = window.URL.createObjectURL(
     new Blob([JSON.stringify(backupData)], { type: 'application/json' })
   )
+  state.onPrepare = false
   a.download =
     'smth' + date.getFullYear() + '_' + (date.getMonth() + 1) + '_' + date.getDate() + '.json'
   a.click()
 }
-function prepareData() {
-  state.showExport = !state.showExport
-  if (!state.showExport) {
-    return
-  }
+function exportBackup() {
+  state.onPrepare = true
   storage
     .getAllUserData()
     .then((usersData: UserData[]) => {
@@ -35,26 +31,26 @@ function prepareData() {
     })
     .then((articles: Article[]) => {
       backupData.articles = articles
-      state.prepared = true
       saveBackup()
     })
 }
-function importBackup(backup: Backup) {
+function openFileChooser() {
+  document.querySelector<HTMLInputElement>('#newsmth_backup')?.click()
+}
+function mergeBackupData(backup: Backup) {
   storage
     .saveAllArticle(backup.articles)
     .then(() => {
       return storage.saveAllUserData(backup.usersData)
     })
     .then(() => {
-      alert('导入完成')
-      window.location.reload()
+      info(2, '导入完成!点击“应用”或继续')
     })
     .catch((e) => {
-      alert(e)
-      window.location.reload()
+      info(3, e)
     })
 }
-function mergeBackupData(e: Event) {
+function importBackup(e: Event) {
   const el = e.target
   if (!(el instanceof HTMLInputElement)) {
     return
@@ -62,12 +58,13 @@ function mergeBackupData(e: Event) {
   const files = el.files
   if (files !== null) {
     for (let index = 0; index < files.length; index++) {
+      info(200, '正在导入......')
       const file = files[index]
       const reader = new FileReader()
       reader.onload = function () {
         if (reader.result !== null) {
           const backup: Backup = JSON.parse(reader.result as string)
-          importBackup(backup)
+          mergeBackupData(backup)
         }
       }
       reader.readAsText(file)
@@ -82,22 +79,17 @@ interface Backup {
 <template>
   <div>
     <h3>备份</h3>
-    <button @click="state.showImport = !state.showImport">导入备份</button>
-    <button @click="prepareData()" :disabled="state.showExport && !state.prepared">导出备份</button>
-    <br />
-    <div v-if="state.showImport" class="border-dotted">
-      <input
-        type="file"
-        name="file"
-        multiple
-        accept="application/json"
-        id="newsmth_backup"
-        v-on:input="mergeBackupData"
-      />
-    </div>
-    <div v-if="state.showExport">
-      <span v-show="!state.prepared">准备数据中......</span>
-    </div>
+    <button @click="exportBackup" :disabled="state.onPrepare">导出备份</button>
+    <button @click="openFileChooser">导入备份</button>
+    <input
+      style="display: none"
+      type="file"
+      name="file"
+      multiple
+      accept="application/json"
+      id="newsmth_backup"
+      v-on:input="importBackup"
+    />
   </div>
 </template>
 
