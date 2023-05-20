@@ -178,6 +178,10 @@ function putOneByOne(
   reject: () => void
 ) {
   const max = data.length
+  if (max === 0) {
+    resolve(0)
+    return
+  }
   singlePut(0)
   function singlePut(index: number) {
     const singleData = data[index]
