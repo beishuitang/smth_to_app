@@ -38,6 +38,8 @@ export const useAppStateStore = defineStore('appStateStore', () => {
       switch (appState.showState.state) {
         case 1:
           appState.showState.state = 0
+          document.querySelector<HTMLElement>('#menu')?.classList.remove('display')
+          document.querySelector<HTMLInputElement>('#b_search')?.blur()
           appState.showState.showMenu = false
           break
         case 0:
@@ -55,6 +57,7 @@ export const useAppStateStore = defineStore('appStateStore', () => {
           break
         case 0:
           appState.showState.state = 1
+          document.querySelector<HTMLElement>('#menu')?.classList.add('display')
           appState.showState.showMenu = true
           break
         default:

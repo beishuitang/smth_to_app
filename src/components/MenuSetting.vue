@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { useAppStateStore } from '@/stores/appStateStore'
-import { watch } from 'vue'
 import SettingPanel from './SettingPanel.vue'
 import { fixSearchBoard } from '@/scripts/bugHandler'
 defineProps<{
@@ -9,7 +8,6 @@ defineProps<{
 const showState = useAppStateStore().appState.showState
 const menuEl = document.querySelector('#menu') as HTMLElement
 const loginEl = menuEl.querySelector('#u_login') as HTMLElement
-const classList = menuEl.classList
 const username = 'newsmth_script_username'
 const password = 'newsmth_script_password'
 const saveConfig = 'newsmth_script_pass_config'
@@ -65,17 +63,7 @@ new MutationObserver(() => {
   fillPassword()
 }).observe(loginEl, mutConfig)
 fillPassword()
-watch(
-  () => showState.showMenu,
-  (showMenu) => {
-    if (showMenu) {
-      classList?.add('display')
-    } else {
-      classList?.remove('display')
-      menuEl.querySelector<HTMLInputElement>('#b_search')?.blur()
-    }
-  }
-)
+
 </script>
 
 <template>
