@@ -34,20 +34,23 @@ export default {
     cssUtils.init()
     eventHandler.handleInputEvent()
     this.listen()
-    this.addMenuAndPanel()
+    this.addMenu()
+    this.addPanel()
     keepAlive(20)
   },
-  addMenuAndPanel: function () {
+  addMenu: function () {
+    const menuDiv = document.createElement('div')
+    appContainer.getApp(MenuSettingVue).mount(menuDiv)
+    document.querySelector('#menu')?.appendChild(menuDiv)
+  },
+  addPanel: function () {
     setTimeout(() => {
       if (this.dbPrepared) {
-        const menuDiv = document.createElement('div')
-        appContainer.getApp(MenuSettingVue).mount(menuDiv)
-        document.querySelector('#menu')?.appendChild(menuDiv)
         const panelDiv = document.createElement('div')
         appContainer.getApp(UserPanelVue).mount(panelDiv)
         document.body.appendChild(panelDiv)
       } else {
-        this.addMenuAndPanel()
+        this.addPanel()
       }
     }, 10)
   },
