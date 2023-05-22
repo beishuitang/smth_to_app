@@ -23,7 +23,7 @@ export const useAppStateStore = defineStore('appStateStore', () => {
     mainHash: 'mainpage',
     showState: {
       showSetting: false,
-      state: 0,
+      state: 0 as -1 | 0 | 1,
       showPanel: false,
       showMenu: false
     },
@@ -82,9 +82,8 @@ export const useAppStateStore = defineStore('appStateStore', () => {
     historyStackCheck()
   }
   function onBodyMut() {
-    appState.showState.state = 0
-    appState.showState.showMenu = false
-    appState.showState.showPanel = false
+    appState.showState.state === 1 && changeShowstate('left')
+    appState.showState.state === -1 && changeShowstate('right')
     historyQueue[1].commited = true
     markStepOutLink(fromStepOut, historyQueue[0].hash.replace('#!', '').replace(pageReg, ''))
     fromStepOut = false
