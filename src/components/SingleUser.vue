@@ -44,31 +44,27 @@ function updateRelativeIds(userData: UserData) {
 const tempID = ref('')
 const showMajiaModifier = ref(false)
 const showUser = computed(() => {
-  if (!props.filter) {
-    return true
-  }
+  if (userData.id === '') return false
+  if (!props.filter) return true
+  if (userData.id === props.filter.searchText) return true
+  const tagNames = Object.keys(userData.tags)
+  if (tagNames.length === 0) return false
   let reg = new RegExp(props.filter.searchText, 'ig')
-  if (userData.score * props.filter.score < 0) {
-    return false
-  }
-  if (userData.id.match(reg)) {
-    return Object.keys(userData.tags).length !== 0
-  }
+  if (userData.id.match(reg)) return true
   if (
     userData.relativeIDs.some((id) => {
       return id.match(reg)
     })
-  ) {
+  )
     return true
-  }
-  let tags = userData.tags
-  for (const tagName in tags) {
-    if (Object.prototype.hasOwnProperty.call(tags, tagName)) {
-      if (tagName.match(reg)) {
-        return true
-      }
-    }
-  }
+
+  if (
+    tagNames.some((tagName) => {
+      return tagName.match(reg)
+    })
+  )
+    return true
+
   return false
 })
 watch(userData.majias, () => {
