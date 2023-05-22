@@ -1,13 +1,24 @@
 <script setup lang="ts">
 import { useAppStateStore } from '@/stores/appStateStore'
 import { useUsersDataStore } from '@/stores/usersDataStore'
-import { reactive } from 'vue'
+import { computed, reactive } from 'vue'
 import SingleUser from './SingleUser.vue'
 const filter = reactive({
   searchText: '',
-  score: 0
+  score: 1,
+  source: 'local' as 'local' | 'smth.top'
 })
-const usersData = useUsersDataStore().usersData
+const usersData = computed(() => {
+  const arr = Object.values(useUsersDataStore().usersData)
+  arr.sort((userData1, userData2) => {
+    if (userData1.state.showUser !== userData2.state.showUser) {
+      return (userData2.state.showUser ? 1 : -1) * filter.score
+    } else {
+      return (userData2.score - userData1.score) * filter.score
+    }
+  })
+  return arr
+})
 let showState = useAppStateStore().appState.showState
 </script>
 <template>
@@ -16,23 +27,28 @@ let showState = useAppStateStore().appState.showState
     id="smth_mark_id_panel"
     :class="{ display: showState.showPanel }"
   >
-    <div>
+    <div v-show="filter.source === 'local'">
       <SingleUser
         class="border"
-        v-for="(userData, id) in usersData"
-        :key="id"
-        :user-id="id"
+        v-for="userData in usersData"
+        :key="userData.id"
+        :user-id="userData.id"
         :filter="filter"
       />
       <br />
     </div>
+    <div v-show="filter.source === 'smth.top'">由于本青拖延症，该页面迟迟未开发。。。。。。</div>
     <div class="search">
       <input type="text" placeholder="搜索" v-model="filter.searchText" />
       <select v-model.number="filter.score" style="height: 2rem">
-        <option disabled>id评分</option>
+        <option disabled>排序</option>
         <option value="1">正分</option>
-        <option value="0">全部</option>
         <option value="-1">负分</option>
+      </select>
+      <select v-model.number="filter.source" style="height: 2rem">
+        <option disabled>来源</option>
+        <option value="local">本地</option>
+        <option value="smth.top">smth.top</option>
       </select>
     </div>
   </div>
