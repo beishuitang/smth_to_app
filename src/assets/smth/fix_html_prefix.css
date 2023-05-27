@@ -339,3 +339,7 @@ body.newsmth-plus #bot_logo img {
   border-right: unset;
   padding-right: unset;
 }
+
+.newsmth-plus .t-btn a {
+  height: unset;
+}

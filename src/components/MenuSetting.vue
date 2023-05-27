@@ -11,7 +11,6 @@ const loginEl = menuEl.querySelector('#u_login') as HTMLElement
 const username = 'newsmth_script_username'
 const password = 'newsmth_script_password'
 const saveConfig = 'newsmth_script_pass_config'
-fixSearchBoard()
 menuEl.addEventListener('click', (event) => {
   const el = event.target
   if (!(el instanceof HTMLElement)) return
@@ -61,9 +60,10 @@ const mutConfig = {
 }
 new MutationObserver(() => {
   fillPassword()
+  fixSearchBoard()
 }).observe(loginEl, mutConfig)
 fillPassword()
-
+fixSearchBoard()
 </script>
 
 <template>

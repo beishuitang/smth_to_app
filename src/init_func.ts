@@ -64,13 +64,11 @@ export default {
       subtree: false
     }
     new MutationObserver(() => {
-      this.bodyElement.style.display = 'none'
-      setTimeout(() => {
-        this.bodyMutCallback()
-      }, 0)
+      this.bodyMutCallback()
     }).observe(this.bodyElement, mutConfig)
   },
   bodyMutCallback: function () {
+    this.bodyElement.style.display = 'none'
     this.appStateStore.onBodyMut()
     cssUtils.pxToRem()
     dispatcher.dispatch(this.bodyElement)
