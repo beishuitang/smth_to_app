@@ -96,9 +96,11 @@ watch(
   }
 )
 function switchUserElShowState(id: string, showUser: boolean) {
-  document.querySelectorAll<HTMLElement>('table.article.' + userData.id).forEach((el) => {
-    el.style.display = showUser ? 'table' : 'none'
-  })
+  document
+    .querySelectorAll<HTMLElement>('table.article[smth-id="' + userData.id + '"]')
+    .forEach((el) => {
+      el.style.display = showUser ? 'table' : 'none'
+    })
 }
 function majiaFunc(func: 'add' | 'del') {
   const id = tempID.value.trim()

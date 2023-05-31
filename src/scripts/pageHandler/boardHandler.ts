@@ -9,7 +9,7 @@ const usersDataStore = useUsersDataStore(appContainer.pinia)
 export default {
   handle(bodyEl: HTMLElement) {
     const tableEl = bodyEl.querySelector('table')
-    if (tableEl == null) {
+    if (tableEl == null || tableEl.id == 'member_list') {
       return
     }
     const userEls = document.querySelectorAll('#body table .title_12')

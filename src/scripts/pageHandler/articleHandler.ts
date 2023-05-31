@@ -30,7 +30,7 @@ function fnArticle(articleElement: HTMLTableElement, index: number) {
   const user_a = a_u_name?.querySelector('a')
   const userId = user_a ? user_a.innerText : (<HTMLElement>a_u_name)?.innerText
   const classList = articleElement.classList
-  classList.add(userId)
+  articleElement.setAttribute('smth-id', userId)
   if (!usersDataStore.getUserById(userId).state.showUser) {
     articleElement.style.display = 'none'
     // return
