@@ -15,3 +15,16 @@ export function fixSearchBoard() {
   input.parentElement?.appendChild(form)
   form.appendChild(input!)
 }
+
+export function fixImg() {
+  document.addEventListener(
+    'error',
+    function (event) {
+      const el = event.target
+      if (el instanceof HTMLImageElement && el.src.endsWith('/large')) {
+        el.src = el.src.replace(/\/large$/, '')
+      }
+    },
+    true
+  )
+}

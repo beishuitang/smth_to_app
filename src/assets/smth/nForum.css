@@ -54,3 +54,8 @@ html {
 .modifier-hide {
   display: none;
 }
+
+.simple img {
+  min-width: 5rem;
+  min-height: 5rem;
+}

@@ -1,4 +1,5 @@
 import init_func from './init_func'
+import { fixImg } from './scripts/bugHandler'
 export default {
   run: function () {
     if (window.newsmth_script_loaded === true) {
@@ -6,6 +7,7 @@ export default {
     }
     window.newsmth_script_loaded = true
     init_func.initDb()
+    fixImg()
     if (document.readyState === 'loading') {
       // 此时加载尚未完成
       document.addEventListener('DOMContentLoaded', () => {
