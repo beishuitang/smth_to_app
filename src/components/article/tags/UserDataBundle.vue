@@ -23,13 +23,7 @@ const articleUri = computed(
     :tags="useUsersDataStore().getUserById(articleInfo.userId).tags"
     v-if="useUsersDataStore().getUserById(articleInfo.userId).state.showTags"
   />
-  <TagModifier
-    v-if="articleInfo.showModifier"
-    :userId="articleInfo.userId"
-    :articleId="articleInfo.articleId"
-    :articleUri="articleUri"
-    :content="articleInfo.content"
-  />
+  <TagModifier v-if="articleInfo.showModifier" :articleUri="articleUri" v-bind="articleInfo" />
   <!-- <MaJia :majias="idData.majias" /> -->
 </template>
 <style></style>

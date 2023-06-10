@@ -8,19 +8,29 @@ const props = defineProps<{
 // const href = props.uri.toString()
 const contents = reactive([] as string[])
 storage.getArticleByUri(props.uri as string).then((article) => {
-  article &&
-    article.content.forEach((c) => {
-      contents.push(c)
-    })
+  article?.content.forEach((c) => {
+    contents.push(c)
+  })
 })
 </script>
 
 <template>
   <div>
     <!-- <a :href="href" target="_blank">{{ href }}</a> -->
-    <p v-for="(content, index) of contents" v-bind:key="index" v-html="content"></p>
+    <p
+      class="tag-reason"
+      v-for="(content, index) of contents"
+      v-bind:key="index"
+      v-html="content"
+    ></p>
   </div>
 </template>
+
+<style>
+.tag-reason img.resizeable {
+  width: unset !important;
+}
+</style>
 
 <style scoped>
 div {

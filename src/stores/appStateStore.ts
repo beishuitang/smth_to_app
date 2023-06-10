@@ -187,6 +187,7 @@ export const useAppStateStore = defineStore('appStateStore', () => {
       userId: '',
       articleId: '',
       content: '',
+      p: {} as HTMLParagraphElement,
       showModifier: false,
       ip: ''
     })
@@ -206,6 +207,7 @@ interface ArticleInfo {
   userId: string
   articleId: string
   content: string
+  p: HTMLParagraphElement
   showModifier: boolean
   ip?: string
   ipInfo?: string

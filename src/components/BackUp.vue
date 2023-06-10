@@ -3,35 +3,49 @@ import { reactive } from 'vue'
 import type { UserData } from '@/scripts/class/UserData'
 import storage from '@/scripts/storage'
 import type { Article } from '@/scripts/class/Article'
+import type { Img } from '@/scripts/class/Img'
+import JSZip from 'jszip'
 import { info } from '@/scripts/commonUtils'
 
 const state = reactive({
   onPrepare: false
 })
-const backupData: Backup = { usersData: [], articles: [] }
-
-function saveBackup() {
+const mainJsonFileName = 'smth_to_app.json'
+const uriPrefix = 'https://'
+const imgPostfix = '.jpeg'
+const imgRegExp = new RegExp(`${imgPostfix}$`)
+function saveBackup(blob: Blob) {
   const date = new Date()
   let a = document.createElement('a')
-  a.href = window.URL.createObjectURL(
-    new Blob([JSON.stringify(backupData)], { type: 'application/json' })
-  )
+  a.href = window.URL.createObjectURL(blob)
   state.onPrepare = false
   a.download =
-    'smth' + date.getFullYear() + '_' + (date.getMonth() + 1) + '_' + date.getDate() + '.json'
+    'smth' + date.getFullYear() + '_' + (date.getMonth() + 1) + '_' + date.getDate() + '.zip'
   a.click()
 }
 function exportBackup() {
+  const backupData: Backup = { usersData: [], articles: [] }
   state.onPrepare = true
+  const zip = new JSZip()
   storage
     .getAllUserData()
     .then((usersData: UserData[]) => {
       backupData.usersData = usersData
-      return storage.getAllArticles()
+      return storage.getAllArticle()
     })
     .then((articles: Article[]) => {
       backupData.articles = articles
-      saveBackup()
+      zip.file(mainJsonFileName, JSON.stringify(backupData))
+      return storage.getAllImg()
+    })
+    .then((imgs: Img[]) => {
+      for (const img of imgs) {
+        zip.file(img.imgUri.replace(uriPrefix, '') + imgPostfix, img.data, { binary: true })
+      }
+      return zip.generateAsync({ type: 'blob' })
+    })
+    .then((content: Blob) => {
+      saveBackup(content)
     })
 }
 function openFileChooser() {
@@ -42,6 +56,9 @@ function mergeBackupData(backup: Backup) {
     .saveAllArticle(backup.articles)
     .then(() => {
       return storage.saveAllUserData(backup.usersData)
+    })
+    .then(() => {
+      return storage.saveAllImg(backup.imgs ? backup.imgs : [])
     })
     .then(() => {
       info(2, '导入完成!点击“应用”或继续')
@@ -63,17 +80,42 @@ function importBackup(e: Event) {
       const reader = new FileReader()
       reader.onload = function () {
         if (reader.result !== null) {
-          const backup: Backup = JSON.parse(reader.result as string)
-          mergeBackupData(backup)
+          handleZipFile(reader.result as ArrayBuffer)
         }
       }
-      reader.readAsText(file)
+      reader.readAsArrayBuffer(file)
     }
   }
+}
+async function handleZipFile(f: ArrayBuffer) {
+  const zipfile = await JSZip.loadAsync(f)
+  const files = zipfile.files
+  const mainJsonFile = files[mainJsonFileName]
+  if (!mainJsonFile) {
+    info(2, '文件错误，导入失败')
+    return
+  }
+  const mainJsonString = await mainJsonFile.async('string')
+  const backup: Backup = JSON.parse(mainJsonString)
+  backup.imgs = []
+  for (const path in files) {
+    if (Object.prototype.hasOwnProperty.call(files, path)) {
+      console.log(path)
+      const zipObject = files[path]
+      if (path.endsWith(imgPostfix)) {
+        console.log('aaaaaaaaaaaaa')
+        const blob = await zipObject.async('blob')
+        backup.imgs?.push({ imgUri: uriPrefix + path.replace(imgRegExp, ''), data: blob })
+      }
+    }
+  }
+  console.log(backup.imgs?.length)
+  mergeBackupData(backup)
 }
 interface Backup {
   usersData: UserData[]
   articles: Article[]
+  imgs?: Img[]
 }
 </script>
 <template>
@@ -86,7 +128,7 @@ interface Backup {
       type="file"
       name="file"
       multiple
-      accept="application/json"
+      accept="application/zip"
       id="newsmth_backup"
       v-on:input="importBackup"
     />

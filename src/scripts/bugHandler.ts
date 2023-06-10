@@ -1,3 +1,4 @@
+import storage from '@/scripts/storage'
 export function fixEmptyBoard() {
   setTimeout(() => {
     window.APP.body.refresh(true)
@@ -19,10 +20,20 @@ export function fixSearchBoard() {
 export function fixImg() {
   document.addEventListener(
     'error',
-    function (event) {
+    async function (event) {
       const el = event.target
       if (el instanceof HTMLImageElement && el.src.endsWith('/large')) {
-        el.src = el.src.replace(/\/large$/, '')
+        const src = el.src.replace(/\/large$/, '')
+        const img = await storage.getImgByUri(src)
+        if (!img) {
+          el.src = src
+        } else {
+          const fileReader = new FileReader()
+          fileReader.readAsDataURL(img.data)
+          fileReader.onload = function () {
+            el.src = fileReader.result as string
+          }
+        }
       }
     },
     true

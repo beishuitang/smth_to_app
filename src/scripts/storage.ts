@@ -1,6 +1,7 @@
 import type { UserData } from './class/UserData'
 import type { Article } from './class/Article'
 import type { Topic } from './class/Topic'
+import type { Img } from './class/Img'
 
 class Storage {
   DB!: IDBDatabase
@@ -8,6 +9,7 @@ class Storage {
   articleTableName = 'article'
   topicTableName = 'topic'
   objectTableName = 'file'
+  imgTableName = 'img'
   ipFileKey = 'ipFile'
   initDB = () => {
     return new Promise<void>((resolve, reject) => {
@@ -35,6 +37,12 @@ class Storage {
         }
         if (!this.DB.objectStoreNames.contains(this.topicTableName)) {
           this.DB.createObjectStore(this.topicTableName, { keyPath: 'topicUri' }).createIndex(
+            'update_time',
+            'u'
+          )
+        }
+        if (!this.DB.objectStoreNames.contains(this.imgTableName)) {
+          this.DB.createObjectStore(this.imgTableName, { keyPath: 'imgUri' }).createIndex(
             'update_time',
             'u'
           )
@@ -118,7 +126,7 @@ class Storage {
       }
     })
   }
-  getAllArticles = () => {
+  getAllArticle = () => {
     return new Promise<Article[]>((resolve, reject) => {
       const idbRequest = this.DB.transaction([this.articleTableName])
         .objectStore(this.articleTableName)
@@ -150,6 +158,48 @@ class Storage {
       idbRequest.onsuccess = resolve
     })
   }
+  saveImg = (img: Img) => {
+    return new Promise((resolve, reject) => {
+      img.u = Date.now()
+      const idbRequest = this.DB.transaction([this.imgTableName], 'readwrite')
+        .objectStore(this.imgTableName)
+        .put(img)
+      idbRequest.onsuccess = resolve
+      idbRequest.onerror = reject
+    })
+  }
+  saveAllImg = (imgs: Img[]) => {
+    return new Promise<number>((resolve, reject) => {
+      const idbObjectStore = this.DB.transaction([this.imgTableName], 'readwrite').objectStore(
+        this.imgTableName
+      )
+      console.log(imgs.length)
+      putOneByOne(idbObjectStore, imgs, resolve, reject)
+    })
+  }
+  getImgByUri = (uri: string) => {
+    return new Promise<Img | undefined>((resolve, reject) => {
+      const idbRequest = this.DB.transaction([this.imgTableName])
+        .objectStore(this.imgTableName)
+        .get(uri)
+      idbRequest.onerror = reject
+      idbRequest.onsuccess = function () {
+        resolve(idbRequest.result)
+      }
+    })
+  }
+  getAllImg = () => {
+    return new Promise<Img[]>((resolve, reject) => {
+      const idbRequest = this.DB.transaction([this.imgTableName])
+        .objectStore(this.imgTableName)
+        .getAll()
+      idbRequest.onsuccess = function () {
+        resolve(idbRequest.result)
+      }
+      idbRequest.onerror = reject
+    })
+  }
+
   getIpDB = () => {
     return new Promise<Blob | undefined>((resolve, reject) => {
       const idbRequest = this.DB.transaction([this.objectTableName])
@@ -173,7 +223,7 @@ class Storage {
 }
 function putOneByOne(
   idbObjectStore: IDBObjectStore,
-  data: UserData[] | Topic[] | Article[],
+  data: UserData[] | Topic[] | Article[] | Img[],
   resolve: (value: number | PromiseLike<number>) => void,
   reject: () => void
 ) {

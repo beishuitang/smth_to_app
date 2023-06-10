@@ -61,6 +61,7 @@ function fnArticle(articleElement: HTMLTableElement, index: number) {
     userId: userId,
     articleId: articleId,
     content: content,
+    p: p_el,
     showModifier: false,
     ip: ip,
     ipInfo: ipData.getIpInfo(ip)

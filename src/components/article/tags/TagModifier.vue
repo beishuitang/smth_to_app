@@ -9,6 +9,7 @@ const props = defineProps<{
   articleId: string
   articleUri: string
   content: string
+  p: HTMLParagraphElement
 }>()
 
 const saveUserData = useUsersDataStore().saveUserData
@@ -34,20 +35,36 @@ const currentTagsObject = computed(() => {
   }
   return result
 })
-function modify(step: number) {
+async function modify(step: number) {
   UserData.addModify(idData, tagName.value, step, props.articleUri)
-  storage.getArticleByUri(props.articleUri).then((article) => {
-    const contents = article ? article.content : []
-    contents.includes(props.content) || contents.push(props.content)
-    storage.saveArticle({
-      articleUri: props.articleUri,
-      content: contents,
-      id: props.userId,
-      t: Date.now(),
-      tags: currentTagsObject.value
-    })
+  const article = await storage.getArticleByUri(props.articleUri)
+  const contents = article ? article.content : []
+  contents.includes(props.content) || contents.push(props.content)
+  await storage.saveArticle({
+    articleUri: props.articleUri,
+    content: contents,
+    id: props.userId,
+    t: Date.now()
+    // tags: currentTagsObject.value
   })
   saveUserData(idData)
+  const imgEls = props.p.querySelectorAll('img')
+  for (let index = 0; index < imgEls.length; index++) {
+    const imgEl = imgEls[index]
+    if (imgEl.src.startsWith('https://www.newsmth.net/nForum/')) {
+      const imgUri = imgEl.src.replace(/\/large$/, '')
+      const response = await fetch(imgUri)
+      if (response.status !== 200) {
+        return
+      }
+      const blob = await response.blob()
+      await storage.saveImg({ imgUri: imgUri, data: blob })
+    } else if (imgEl.src.startsWith('https://static.newsmth.net/nForum/')) {
+      {
+        //TODO
+      }
+    }
+  }
 }
 </script>
 <template>
