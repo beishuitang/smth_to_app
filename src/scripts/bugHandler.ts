@@ -23,17 +23,12 @@ export function fixImg() {
     async function (event) {
       const el = event.target
       if (el instanceof HTMLImageElement && el.src.endsWith('/large')) {
-        const src = el.src.replace(/\/large$/, '')
-        const img = await storage.getImgByUri(src)
-        if (!img) {
-          el.src = src
-        } else {
-          const fileReader = new FileReader()
-          fileReader.readAsDataURL(img.data)
-          fileReader.onload = function () {
-            el.src = fileReader.result as string
-          }
+        let url = el.src.replace(/\/large$/, '')
+        const img = await storage.getImgByUri(url)
+        if (img) {
+          url = URL.createObjectURL(img.data)
         }
+        el.src = url
       }
     },
     true

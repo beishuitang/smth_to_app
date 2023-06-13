@@ -3,6 +3,7 @@ import { UserData, type UserTags } from '@/scripts/class/UserData'
 import storage from '@/scripts/storage'
 import { ref, computed } from 'vue'
 import { useUsersDataStore } from '@/stores/usersDataStore'
+import staticApp from '@/staticApp'
 const props = defineProps<{
   msg?: string
   userId: string
@@ -49,6 +50,7 @@ async function modify(step: number) {
   })
   saveUserData(idData)
   const imgEls = props.p.querySelectorAll('img')
+  const srcs = []
   for (let index = 0; index < imgEls.length; index++) {
     const imgEl = imgEls[index]
     if (imgEl.src.startsWith('https://www.newsmth.net/nForum/')) {
@@ -59,12 +61,16 @@ async function modify(step: number) {
       }
       const blob = await response.blob()
       await storage.saveImg({ imgUri: imgUri, data: blob })
-    } else if (imgEl.src.startsWith('https://static.newsmth.net/nForum/')) {
+    } else if (
+      imgEl.src.startsWith('https://static.newsmth.net/nForum/') ||
+      imgEl.src.startsWith('https://static.mysmth.net/nForum/')
+    ) {
       {
-        //TODO
+        srcs.push(imgEl.src)
       }
     }
   }
+  staticApp.openUrl(srcs)
 }
 </script>
 <template>

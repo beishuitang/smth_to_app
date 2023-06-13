@@ -1,11 +1,16 @@
 import init_func from './init_func'
 import { fixImg } from './scripts/bugHandler'
+import staticApp from '@/staticApp'
 export default {
   run: function () {
     if (window.newsmth_script_loaded === true) {
       return
     }
     window.newsmth_script_loaded = true
+    staticApp.init()
+    if (location.hostname !== 'www.newsmth.net') {
+      return
+    }
     init_func.initDb()
     fixImg()
     if (document.readyState === 'loading') {
