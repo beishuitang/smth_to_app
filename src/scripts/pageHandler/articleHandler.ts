@@ -1,10 +1,7 @@
 import appcontainer from '../appContainer'
-import { useAppStateStore } from '@/stores/appStateStore'
-import { useUsersDataStore } from '@/stores/usersDataStore'
+import { useAppStateStore, type ArticleInfo } from '@/stores/appStateStore'
 import config from '@/scripts/smthScriptConfig'
-import ipData from '@/scripts/ipData'
 
-const usersDataStore = useUsersDataStore(appcontainer.pinia)
 const appState = useAppStateStore(appcontainer.pinia).appState
 const aImgsReg = /<a target=.*?><img.*?><\/a>/g
 export default {
@@ -31,10 +28,6 @@ function fnArticle(articleElement: HTMLTableElement, index: number) {
   const userId = user_a ? user_a.innerText : (<HTMLElement>a_u_name)?.innerText
   const classList = articleElement.classList
   articleElement.setAttribute('smth-id', userId)
-  if (!usersDataStore.getUserById(userId).state.showUser) {
-    articleElement.style.display = 'none'
-    // return
-  }
   const classname = 'simple-article'
   articleElement.addEventListener(
     'dblclick',
@@ -47,27 +40,31 @@ function fnArticle(articleElement: HTMLTableElement, index: number) {
   // a_u_name.innerHTML += ElementStr.userScoreEl
   // a_func.innerHTML += ElementStr.modifierSwitchEl
 
-  const p_el = articleElement.querySelector<HTMLElement>('.a-body .a-content>p')
+  const p_el = articleElement.querySelector<HTMLParagraphElement>('.a-body .a-content>p')
   if (p_el == null) return
   let articleId = ''
   if (a_func_forward instanceof HTMLAnchorElement) {
     const href = a_func_forward.href
     articleId = href.substring(href.lastIndexOf('/') + 1, href.lastIndexOf('.'))
   }
+  const topicState = useAppStateStore().appState.topicState
+  const articleUri = topicState.board + '/' + topicState.topicId + '/' + articleId
+
   const content =
     config.onMobile && config.simplifyConfig.simplify ? pageArticleSimplify(p_el) : p_el.innerHTML
   const ip = getPageIp(articleElement)
-  Object.assign(appState.articleInfoArr[index], {
+  const articleInfo: ArticleInfo = {
     userId: userId,
     articleId: articleId,
     content: content,
     p: p_el,
     showModifier: false,
     ip: ip,
-    ipInfo: ipData.getIpInfo(ip)
-  })
-  a_content.insertBefore(appcontainer.appElArrs[index].userDataBundleEl, a_content.firstChild)
-  a_func.appendChild(appcontainer.appElArrs[index].modifierSwitchEl)
+    articleUri: articleUri
+  }
+  Object.assign(appState.articleInfoArr[index], articleInfo)
+  a_content.insertBefore(appcontainer.articleEls[index].userDataBundleEl, a_content.firstChild)
+  a_func.appendChild(appcontainer.articleEls[index].modifierSwitchEl)
 
   if (config.onMobile) {
     const li = document.createElement('li')
@@ -75,9 +72,9 @@ function fnArticle(articleElement: HTMLTableElement, index: number) {
     li.appendChild(a_u_name)
     a_func.insertBefore(li, a_func.firstChild)
     a_func.appendChild(a_pos)
-    li.appendChild(appcontainer.appElArrs[index].userScoreEl)
+    li.appendChild(appcontainer.articleEls[index].userInfoEl)
   } else {
-    a_u_name.appendChild(appcontainer.appElArrs[index].userScoreEl)
+    a_u_name.appendChild(appcontainer.articleEls[index].userInfoEl)
   }
 }
 
@@ -105,6 +102,7 @@ function pageArticleSimplify(p: HTMLElement) {
 
 function getPageIp(articleElement: HTMLElement) {
   const fonts = articleElement.querySelectorAll<HTMLElement>('.a-body .a-content>p>font')
+  if (fonts.length < 2) return ''
   // const fonts = p?.querySelectorAll("font");
   const ipText = fonts[fonts.length - 2].innerText
   const index = ipText.lastIndexOf('FROM: ')

@@ -1,4 +1,4 @@
-import storage from '@/scripts/storage'
+import imgStore from '@/stores/imgStore'
 export function fixEmptyBoard() {
   setTimeout(() => {
     window.APP.body.refresh(true)
@@ -24,9 +24,9 @@ export function fixImg() {
       const el = event.target
       if (el instanceof HTMLImageElement && el.src.endsWith('/large')) {
         let url = el.src.replace(/\/large$/, '')
-        const img = await storage.getImgByUri(url)
-        if (img) {
-          url = URL.createObjectURL(img.data)
+        const img = await imgStore.get(url)
+        if (img.imgBlob) {
+          url = URL.createObjectURL(img.imgBlob)
         }
         el.src = url
       }

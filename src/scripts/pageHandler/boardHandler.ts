@@ -1,11 +1,8 @@
 import config from '@/scripts/smthScriptConfig'
-import { splitName, relayTableAll, addVisitedLinkStyle } from '../commonUtils'
-import appContainer from '../appContainer'
-import { useUsersDataStore } from '@/stores/usersDataStore'
+import { splitName, relayTableAll } from '../commonUtils'
 import { fixEmptyBoard } from '@/scripts/bugHandler'
-const usersDataStore = useUsersDataStore(appContainer.pinia)
+import cssUtils from '@/scripts/cssUtils'
 
-// import browserUtil from '../browseUtil'
 export default {
   handle(bodyEl: HTMLElement) {
     const tableEl = bodyEl.querySelector('table')
@@ -26,10 +23,10 @@ export default {
     for (let index = 0; index < topicTrs.length; index++) {
       const topic_el = topicTrs[index].querySelector<HTMLAnchorElement>('.title_9>a')
       if (topic_el == null) return
-      const author = topicTrs[index].querySelector('.title_12>a')?.innerHTML ?? ''
-      if (!usersDataStore.getUserById(author).state.showUser) {
-        topicTrs[index].style.display = 'none'
-      }
+      // const author = topicTrs[index].querySelector('.title_12>a')?.innerHTML ?? ''
+      // if (!usersDataStore.getUserById(author).state.showUser) {
+      // topicTrs[index].style.display = 'none'
+      // }
       const middle_els = topicTrs[index].querySelectorAll('.middle')
       const score = middle_els[0].innerHTML
       const like = middle_els[1].innerHTML
@@ -38,7 +35,7 @@ export default {
       topic_p1.href = topic_el.href
       topic_p1.innerHTML = `[${score}${score + like == '' ? ' ' : '/'}${like}]`
       topic_el.parentNode?.insertBefore(topic_p1, topic_el)
-      addVisitedLinkStyle(topic_el, parseInt(pos))
+      cssUtils.addVisitedLinkStyle(topic_el, parseInt(pos))
     }
   }
 }

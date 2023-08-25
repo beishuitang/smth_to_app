@@ -3,6 +3,7 @@ import '@/assets/smth/fix_html_prefix.css'
 import '@/assets/smth/nForum.css'
 import '@/assets/smth/pack_rem_link.css'
 import smthScriptConfig from '@/scripts/smthScriptConfig'
+import topicStore from '@/stores/topicStore'
 export default {
   init: function () {
     if (!smthScriptConfig.onMobile) return
@@ -32,6 +33,18 @@ export default {
       return
     }
     style.innerHTML = replace(style.innerHTML)
+  },
+  addVisitedLinkStyle: function (a_el: HTMLAnchorElement, pos: number) {
+    const topicUri = topicStore.getTopicUri(a_el.href)
+    if (!topicUri) return
+    topicStore.get(topicUri).then((info) => {
+      if (pos <= info.pos) {
+        a_el.style.opacity = '0.5'
+      }
+      const span_el = document.createElement('span')
+      span_el.innerText = `(${info.pos + 1}/${pos + 1})`
+      a_el.parentNode?.insertBefore(span_el, a_el.nextSibling)
+    })
   }
 }
 function replace(s: string) {

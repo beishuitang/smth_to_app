@@ -1,6 +1,6 @@
-import appContainer from '@/scripts/appContainer'
-import { useAppStateStore } from '@/stores/appStateStore'
-const appStateStore = useAppStateStore(appContainer.pinia)
+// import appContainer from '@/scripts/appContainer'
+// import { useAppStateStore } from '@/stores/appStateStore'
+// const appStateStore = useAppStateStore(appContainer.pinia)
 
 export function keepAlive(min: number) {
   // const httpRequest = new XMLHttpRequest();
@@ -70,79 +70,12 @@ function relayTr(tr: Element, tdIndexsToMergeArr: number[][], tdIndexToDelete: n
     // tds[i].remove();
   }
 }
-// export function splitTableAll(tableEl, tdIndexsToMoveUp, tdIndexToDelete) {
-//     splitTable(tableEl.querySelector('thead'), tdIndexsToMoveUp, tdIndexToDelete);
-//     splitTable(tableEl.querySelector('tbody'), tdIndexsToMoveUp, tdIndexToDelete);
-// }
-// function splitTable(trWrapper, tdIndexsToMoveUp, tdIndexToDelete) {
-//     let trs = trWrapper.children;
-//     for (let index = trs.length - 1; index > -1; index--) {
-//         const tr = trs[index];
-//         splitTr(tr, tdIndexsToMoveUp, tdIndexToDelete);
-//     }
-// }
-// function splitTr(tr, tdIndexsToMoveUp, tdIndexToDelete) {
-//     let trClone = tr.cloneNode(false);
-//     tr.parentNode.insertBefore(trClone, tr);
-//     let tds = tr.children;
-//     let tdBuffer = [];
-//     for (let index = tdIndexToDelete.length - 1; index >= 0; index--) {
-//         const i = tdIndexToDelete[index];
-//         // tds[i].remove();
-//         tdBuffer.push(tds[i]);
-//     }
-//     tdIndexsToMoveUp.forEach(tdIndexAndColspan => {
-//         let td = tds[tdIndexAndColspan[0]];
-//         td.setAttribute('colspan', tdIndexAndColspan[1]);
-//         trClone.appendChild(td);
-//     });
-//     tdBuffer.forEach(td => {
-//         td.remove();
-//     });
-// }
-export function removeAd() {
-  const list: NodeListOf<HTMLElement>[] = []
-  // list.push(document.querySelectorAll('.clearfix'))
-  list.push(document.querySelectorAll('iframe'))
-  // list.push(document.querySelectorAll('.mp_clear'))
-  list.push(document.querySelectorAll('.ad'))
-  list.push(document.querySelectorAll('#ban_ner'))
-  list.push(document.querySelectorAll('#left_adv'))
-  list.push(document.querySelectorAll('#sogou_banner'))
-  list.forEach((elements) => {
-    for (let index = 0; index < elements.length; index++) {
-      const element = elements[index]
-      // element.remove();
-      element.style.display = 'none'
-    }
-  })
-}
-
-export function addTransition(el: Element, name: string) {
-  const transition = document.createElement('transition')
-  transition.setAttribute('name', name)
-  el.parentNode?.insertBefore(transition, el)
-  transition.appendChild(el)
-  return transition
-}
 export function rmPage1(pageHref: string) {
   let href = pageHref.replace(/\?p=1$/, '')
   href = href.replace(/\?p=1&/, '?')
   href = href.replace(/&p=1$/, '')
   href = href.replace(/&p=1&/, '&')
   return href
-}
-export function addVisitedLinkStyle(a_el: HTMLAnchorElement, pos: number) {
-  const a_href = a_el.href
-  appStateStore.getTopicByUri(a_href, (info) => {
-    info = info ? info : { topicUri: '', pos: -1, p: 1, scrollY: 0 }
-    if (pos <= info.pos) {
-      a_el.style.opacity = '0.5'
-    }
-    const span_el = document.createElement('span')
-    span_el.innerText = `(${info.pos + 1}/${pos + 1})`
-    a_el.parentNode?.insertBefore(span_el, a_el.nextSibling)
-  })
 }
 let t: NodeJS.Timeout | undefined
 const message = '加载中..'

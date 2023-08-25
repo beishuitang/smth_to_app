@@ -13,7 +13,7 @@ export default {
       return
     }
     if (this.loginRequired(bodyElement)) {
-      this.appStore.changeShowstate('right')
+      // this.appStore.changeShowstate('right')
     } else {
       this.handle(bodyElement)
     }

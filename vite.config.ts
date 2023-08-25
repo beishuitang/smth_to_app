@@ -21,12 +21,21 @@ export default defineConfig({
     //     assetFileNames: `assets/[name].[ext]`
     //   }
     // },
+    // rollupOptions: {
+    //   external: ['vue','buffer','jszip'],
+    //   output: {
+    //     globals: {
+    //       vue: 'Vue'
+    //     }
+    //   }
+    // },
     cssCodeSplit: true,
     lib: {
       entry: path.resolve(__dirname, 'src/main.ts'),
-      name: 'MyLib',
+      name: 'smth.top',
+      formats: ['es', 'iife','umd'],
       fileName: (format) => `my-lib.${format}.js`
-    },
+    }
   },
   plugins: [vue()],
   resolve: {

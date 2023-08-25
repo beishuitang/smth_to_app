@@ -1,6 +1,6 @@
-import type { Img } from './scripts/class/Img'
-import storage from './scripts/storage'
-
+import { Img } from '@/interface/Img'
+import imgStore from './stores/imgStore'
+import type { DataOnly } from './common/typeUtils'
 export default {
   init: function () {
     window.addEventListener('message', receiveMessage, false)
@@ -14,10 +14,10 @@ export default {
     for (let index = 0; index < urls.length; index++) {
       const url = urls[index]
       const uri = url.replace(/\/(large)|(middle)|(small)$/, '')
-      const result = await storage.getImgByUri(uri)
-      if (!result) uris.push(uri)
+      const result = await imgStore.get(uri)
+      if (!result.imgBlob) uris.push(uri)
     }
-    if (!win?.window) {
+    if (!win?.window && uris.length > 0) {
       win = window.open(uris[0])
       window.focus()
     }
@@ -28,19 +28,20 @@ const hostname = location.hostname
 const hostType = hostname.split('.')[0] as 'www' | 'static'
 let win: null | Window = null
 async function fetchAndSendImgs(uris: string[]) {
-  const imgs: Img[] = []
+  const imgs: DataOnly<Img>[] = []
   for (let index = 0; index < uris.length; index++) {
     const uri = uris[index]
     const blob = await (await fetch(location.pathname)).blob()
-    const img: Img = { imgUri: uri, data: blob }
-    imgs.push(img)
+    imgs.push(new Img(uri, blob))
   }
   win?.postMessage({ act: 'imgs', imgs: imgs }, '*')
 }
 
-function saveImgs(imgs: Img[]) {
-  imgs.forEach((img) => {
-    storage.saveImg(img)
+function saveImgs(imgs: DataOnly<Img>[]) {
+  imgs.forEach((imgData) => {
+    imgStore.get(imgData.imgUri).then((img) => {
+      img.addImgData(imgData.imgBlob!)
+    })
   })
   uris.length = 0
   win?.postMessage({ act: 'close' }, '*')
@@ -70,7 +71,7 @@ function receiveMessage(ev: MessageEvent<Partial<message>>) {
 }
 type message = {
   act: 'ready' | 'imgs' | 'uris' | 'close' | 'null'
-  imgs: Img[]
+  imgs: DataOnly<Img>[]
   uris: string[]
 }
 const defaultMessage = {

@@ -1,4 +1,6 @@
 import { useAppStateStore } from '@/stores/appStateStore'
+import stackStore from '@/stores/stackStore'
+import topicStore from '@/stores/topicStore'
 import appContainer from './appContainer'
 import config from './smthScriptConfig'
 
@@ -15,7 +17,7 @@ function swipe(direction: direction, long = false) {
     : horizontalSwipe(direction)
 }
 function verticalSwipe(direction: 'up' | 'down', long = false) {
-  if (appStore.appState.showState.showSetting || appStore.appState.showState.showPanel) {
+  if (appStore.appState.showState.showSetting || appStore.appState.showState.state === 1) {
     return
   }
   if (appStore.appState.mainHash === 'mainpage') {
@@ -25,8 +27,8 @@ function verticalSwipe(direction: 'up' | 'down', long = false) {
   if (el instanceof HTMLTextAreaElement && el.value.trim() !== '') {
     return
   }
-  if (long) {
-    appStore.stepOut(location.hash)
+  if (long && direction === 'down') {
+    stackStore.stepOut()
     return
   }
   if ((direction === 'down' && !atTop()) || (direction === 'up' && !atBottom())) {
@@ -43,7 +45,7 @@ function verticalSwipe(direction: 'up' | 'down', long = false) {
     hashScrollY.hash = location.hash
     hashScrollY.scrollY = direction === 'up' ? 0 : 10000
   } else {
-    appStore.stepOut(location.hash)
+    stackStore.stepOut()
   }
 }
 function horizontalSwipe(direction: 'left' | 'right') {
@@ -63,17 +65,6 @@ function preventDblclickDefault() {
 let startX: number
 let startY: number
 
-function handleEvent(event: Event) {
-  if (event instanceof KeyboardEvent && !focusOnInput()) {
-    handleKeyboardEvent(event)
-  } else if (event instanceof WheelEvent) {
-    handleWheelEvent(event)
-  } else if (event instanceof MouseEvent) {
-    handleMouseEvent(event)
-  } else if (event instanceof TouchEvent) {
-    handleTouchEvent(event)
-  }
-}
 /**
  * 监听
  * @param target            要绑定监听的目标元素
@@ -88,7 +79,17 @@ function listenEvent(target: HTMLElement | Window | Document) {
   target.addEventListener('mouseup', handleEvent, false)
   target.addEventListener('click', handleClickEvent, true)
 }
-
+function handleEvent(event: Event) {
+  if (event instanceof KeyboardEvent && !focusOnInput()) {
+    handleKeyboardEvent(event)
+  } else if (event instanceof WheelEvent) {
+    handleWheelEvent(event)
+  } else if (event instanceof MouseEvent) {
+    handleMouseEvent(event)
+  } else if (event instanceof TouchEvent) {
+    handleTouchEvent(event)
+  }
+}
 function handleClickEvent(event: Event) {
   const el = event.target
   if (!(el instanceof HTMLElement)) return
@@ -106,26 +107,25 @@ function handleClickEvent(event: Event) {
     link === undefined ||
     link.target === '_blank' ||
     link.host !== config.host ||
-    // link.href.endsWith('.json') ||
-    !link.href.match(/nForum\/article\/([\w.]+)\/(\d+)$/)
+    link.href.endsWith('.json')
   )
     return
-
+  const topicUri = topicStore.getTopicUri(link.href)
+  if (!topicUri) return
   event.preventDefault()
   event.stopImmediatePropagation()
-  appStore.getTopicByUri(link.href, (topic) => {
-    const postFix = topic === undefined ? '' : `?p=${topic.p}`
+  topicStore.get(topicUri).then((topic) => {
+    const postFix = `?p=${topic.p}`
     const hashScrollY = appStore.scrollY
-    hashScrollY.scrollY = topic === undefined ? 0 : topic.scrollY
-    link instanceof HTMLAnchorElement &&
-      (link.href = link.href + postFix) &&
-      window.APP.body.open(link)
+    hashScrollY.scrollY = topic.scrollY
+    link!.href = link!.href + postFix
+    window.APP.body.open(link!)
     hashScrollY.hash = location.hash
   })
 }
 
 type direction = 'up' | 'down' | 'left' | 'right'
-const angle = Math.PI / 4
+const PI = Math.PI
 function atBottom() {
   return window.scrollY + window.innerHeight + 2 > document.body.clientHeight
 }
@@ -138,22 +138,25 @@ function focusOnInput() {
   )
 }
 function handleMouseEvent(event: MouseEvent) {
-  if (event.button === 1) {
-    swipe('down', true)
-  }
+  if (event.button !== 2) return
+  swipe('down', true)
 }
 function handleKeyboardEvent(event: KeyboardEvent) {
   switch (event.type) {
-    case 'keydown':
-      break
     case 'keyup':
+      break
+    case 'keydown':
       if (event.key === 'ArrowLeft') {
         swipe('left')
       } else if (event.key === 'ArrowRight') {
         swipe('right')
       } else if (event.key === 'ArrowDown') {
-        swipe('up')
+        swipe('up', event.ctrlKey)
       } else if (event.key === 'ArrowUp') {
+        swipe('down', event.ctrlKey)
+      } else if (event.key === 'PageDown') {
+        swipe('up')
+      } else if (event.key === 'PageUp') {
         swipe('down')
       }
       break
@@ -173,13 +176,13 @@ function handleTouchEvent(event: TouchEvent) {
       distance = Math.abs(spanX) + Math.abs(spanY)
       if (distance < 30) return
       long = distance > config.longSwipeDistance
-      if (angle >= atan2 && atan2 > -angle) {
+      if (Math.abs(atan2) < 0.5) {
         swipe('right', long)
-      } else if (angle * 3 >= atan2 && atan2 > angle) {
+      } else if (Math.abs(atan2 - PI / 2) < 0.5) {
         swipe('up', long)
-      } else if (-angle >= atan2 && atan2 > -angle * 3) {
+      } else if (Math.abs(atan2 + PI / 2) < 0.5) {
         swipe('down', long)
-      } else {
+      } else if (Math.abs(atan2) > PI - 0.5) {
         swipe('left', long)
       }
       break
@@ -189,11 +192,23 @@ function handleTouchEvent(event: TouchEvent) {
       break
   }
 }
+const cachedSwipe = {
+  swipe: function (direction: 'up' | 'down', long = false) {
+    if (long) {
+      swipe(direction, long)
+      return
+    }
+    if ((direction === 'down' && atTop()) || (direction === 'up' && atBottom())) {
+      this.n++
+      if (cachedSwipe.n > cachedSwipe.threshHold) {
+        swipe(direction)
+        cachedSwipe.n = 0
+      }
+    } else this.n = 0
+  },
+  threshHold: 1,
+  n: 0
+}
 function handleWheelEvent(event: WheelEvent) {
-  const y = event.deltaY
-  if (y > 0) {
-    swipe('up')
-  } else if (y < 0) {
-    swipe('down')
-  }
+  cachedSwipe.swipe(event.deltaY > 0 ? 'up' : 'down')
 }
