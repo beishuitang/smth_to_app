@@ -12,25 +12,25 @@ export class Majia extends Persistence {
     else throw new Error('id格式错误')
   }
 
-  constructor(id1: string, id2: string, private _state = false) {
+  constructor(pair: string)
+  constructor(id1: string, id2: string)
+  constructor(key: string, id2?: string) {
     super()
-    this.pair = Majia.createPairID(id1, id2)
+    this.pair = id2 ? Majia.createPairID(key, id2) : key
   }
 
   readonly pair
-  get state() {
-    return this._state
-  }
+  public state = false
 
   getIDs(majia: DataOnly<Majia> = this): [string, string] {
     return Majia.getIDs(majia)
   }
   enable() {
-    this._state = true
+    this.state = true
     this.save()
   }
   disable() {
-    this._state = false
+    this.state = false
     this.save()
   }
 }

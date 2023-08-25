@@ -3,7 +3,7 @@ import { Persistence } from './Persistence'
 export class ArticleTags extends Persistence {
   constructor(
     public readonly articleUri: string,
-    public readonly id: string,
+    public id: string = '',
     public tags: { [tagName: string]: number } = {}
   ) {
     super()
