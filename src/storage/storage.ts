@@ -1,6 +1,7 @@
 import type { DataOnly } from '@/common/typeUtils'
 import type { fileKey, objectType, obj2tableName, obj2indexName, tableName } from './tableInfo'
 import { tableInfo, fileTableName, getTableName } from './tableInfo'
+import { toRaw } from 'vue'
 
 let DB: IDBDatabase
 function initDB() {
@@ -56,7 +57,7 @@ function save<T extends objectType>(obj: objectType | DataOnly<T>, tableName?: o
   const table = tableName ? tableName : getTableName(obj as objectType)
   return new Promise((resolve, reject) => {
     obj.u = Date.now()
-    const idbRequest = DB.transaction([table], 'readwrite').objectStore(table).put(obj)
+    const idbRequest = DB.transaction([table], 'readwrite').objectStore(table).put(toRaw(obj))
     idbRequest.onerror = reject
     idbRequest.onsuccess = resolve
   })
@@ -104,7 +105,7 @@ function saveAll<T extends objectType>(objects: DataOnly<T>[], tableName: obj2ta
     const idbObjectStore = idbTransaction.objectStore(tableName)
     objects.forEach((data) => {
       data.u = Date.now()
-      idbObjectStore.put(data)
+      idbObjectStore.put(toRaw(data))
     })
     idbTransaction.oncomplete = resolve
     idbTransaction.onerror = reject
