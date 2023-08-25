@@ -1,17 +1,19 @@
 <script setup lang="ts">
-import { useAppStateStore } from '@/stores/appStateStore'
+import type { ArticleInfo } from '@/stores/appStateStore'
 const props = defineProps<{
   msg?: string
-  articleIndex: number
+  articleInfo: ArticleInfo
 }>()
 function modifierSwitch() {
-  const info = useAppStateStore().appState.articleInfoArr[props.articleIndex]
+  const info = props.articleInfo
   info.showModifier = !info.showModifier
 }
 </script>
 <template>
-  <samp class="ico-pos-switch"></samp>
-  <a @click="modifierSwitch()">标记</a>
+  <li>
+    <samp class="ico-pos-switch"></samp>
+    <a @click="modifierSwitch()">标记</a>
+  </li>
 </template>
 <style scoped>
 .ico-pos-switch {

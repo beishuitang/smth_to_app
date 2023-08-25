@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import storage from '@/scripts/storage'
-import ipData from '@/scripts/ipData'
+import storage from '@/storage/storage'
+import { fileKeys } from '@/storage/tableInfo'
+import ipInfoStore from '@/stores/ipInfoStore'
 import { ref, watch } from 'vue'
 import { info } from '@/scripts/commonUtils'
-const loaded = ipData.searcher ? ref(true) : ref(false)
+const loaded = ref(false)
 const showImport = ref(false)
 const autoDownload = ref(false)
 const installing = ref(false)
@@ -17,16 +18,16 @@ watch(autoDownload, (value) => {
 function downloadIpDb() {
   info(2000, '正在下载安装，请稍后')
   installing.value = true
-  const url = 'https://www.newsmth.top/static/ipdb.xdb'
+  const url = 'https://www.newsmth.top/static/ip2region.xdb'
   fetch(url)
     .then((response) => {
-      return getBlob(response)
+      return getArrayBuffer(response)
     })
-    .then((blob) => {
-      return saveIpDb(blob)
+    .then((arrayBuffer) => {
+      return saveIpDb(arrayBuffer)
     })
     .then(() => {
-      return ipData.init()
+      ipInfoStore.init()
     })
     .then(() => {
       loaded.value = true
@@ -40,7 +41,7 @@ function downloadIpDb() {
       autoDownload.value = false
     })
 }
-async function getBlob(response: Response) {
+async function getArrayBuffer(response: Response) {
   const reader = response.body?.getReader()
   const s = response.headers.get('Content-Length')
   if (!reader || !s) {
@@ -63,21 +64,10 @@ async function getBlob(response: Response) {
     chunksAll.set(chunk, position)
     position += chunk.length
   }
-  return new Blob([chunksAll])
+  return chunksAll.buffer
 }
-function importIpDb() {
-  info(100, '正在导入...')
-  installing.value = true
-  const files = document.querySelector<HTMLInputElement>('input#newsmth_IpDB')?.files
-  if (files && files[0] && files[0].name.endsWith('.xdb')) {
-    saveIpDb(files[0])
-  } else {
-    info(3, '导入失败,请检查文件是否正确！')
-    installing.value = false
-  }
-}
-async function saveIpDb(blob: Blob) {
-  await storage.saveIpDB(blob)
+async function saveIpDb(arrayBuffer: ArrayBuffer) {
+  await storage.saveFile(arrayBuffer, fileKeys.ipDB)
   info(3, '导入完成,点击“应用”完成操作')
 }
 </script>
@@ -88,17 +78,13 @@ async function saveIpDb(blob: Blob) {
     <span v-if="loaded"> 已安装 </span>
     <span v-if="!loaded">
       <label :class="{ checked: autoDownload }">
-        自动下载
+        下载更新
         <input type="checkbox" :disabled="installing" v-model="autoDownload" />
       </label>
       <label :class="{ checked: showImport }">
         手动导入
         <input type="checkbox" :disabled="installing" v-model="showImport" />
       </label>
-      <div v-if="showImport">
-        <input type="file" name="file" accept=".xdb" id="newsmth_IpDB" />
-        <button @click="importIpDb()">导入</button>
-      </div>
       <div v-if="installing">
         正在下载:{{ Math.floor((100 * receivedLength) / contentLength) }}%
       </div>

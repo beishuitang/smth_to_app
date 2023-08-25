@@ -1,15 +1,33 @@
 <script setup lang="ts">
-import type { UserTags } from '@/scripts/class/UserData'
-import SingleTag from './SingleTag.vue'
-defineProps<{
-  tags: UserTags
+import cacheStore from '@/stores/cachedTagStore'
+import ArticleTags from './ArticleTags.vue'
+import { ref, watch } from 'vue'
+const props = defineProps<{
+  userId: string
 }>()
+const checkedNames = ref([])
+watch(props, () => {
+  checkedNames.value.splice(0)
+})
 </script>
 
 <template>
+  <div>Checked names: {{ checkedNames }}</div>
   <div>
-    <SingleTag v-for="(tag, tagName) in tags" :singleTag="tag" :tagName="tagName" :key="tagName" />
+    <label v-for="(score, tagName) in cacheStore.get(props.userId).tags" :key="tagName">
+      <input type="checkbox" :key="tagName" :value="tagName" v-model="checkedNames" />
+      {{ tagName }}({{ score }})
+    </label>
   </div>
+  <Suspense>
+    <div v-if="checkedNames.length > 0">
+      <ArticleTags :user-id="props.userId" :tag-names="checkedNames" />
+    </div>
+  </Suspense>
 </template>
 
-<style scoped></style>
+<style scoped>
+input[type='checkbox'] {
+  display: none;
+}
+</style>

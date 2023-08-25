@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useAppStateStore } from '@/stores/appStateStore'
-import SettingPanel from './SettingPanel.vue'
 import { fixSearchBoard } from '@/scripts/bugHandler'
+import { watch } from 'vue'
 defineProps<{
   msg?: string
 }>()
@@ -53,6 +53,19 @@ function fillPassword() {
     }
   }
 }
+
+watch(
+  () => showState.state,
+  (newState, oldState) => {
+    if (oldState === 0 && newState === -1) {
+      document.querySelector<HTMLElement>('#menu')?.classList.add('display')
+    } else if (oldState === -1 && newState === 0) {
+      document.querySelector<HTMLElement>('#menu')?.classList.remove('display')
+      document.querySelector<HTMLInputElement>('#b_search')?.blur()
+    }
+  }
+)
+
 const mutConfig = {
   attributes: false,
   childList: true,
@@ -77,7 +90,6 @@ fixSearchBoard()
       </li>
     </ul>
   </nav>
-  <SettingPanel v-if="showState.showSetting" />
 </template>
 <style>
 body.newsmth-plus #menu {

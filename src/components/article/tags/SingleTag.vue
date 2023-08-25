@@ -1,19 +1,18 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import type { UserTag } from '@/scripts/class/UserData'
-import TagReasons from './TagReasons.vue'
+// import TagReasons from './TagReasons.vue'
 
 defineProps<{
   tagName: string | number
-  singleTag: UserTag
+  score: number
 }>()
 const showReasons = ref(false)
 </script>
 <template>
   <a>
-    <span @click="showReasons = !showReasons">{{ tagName }}({{ singleTag.score }}) </span>
+    <span @click="showReasons = !showReasons">{{ tagName }}({{ score }}) </span>
   </a>
-  <TagReasons :tagUris="singleTag.tagUris" v-if="showReasons" />
+  <!-- <TagReasons :tagUris="singleTag.tagUris" v-if="showReasons" /> -->
 </template>
 
 <style scoped></style>

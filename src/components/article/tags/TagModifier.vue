@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { UserData, type UserTags } from '@/scripts/class/UserData'
-import storage from '@/scripts/storage'
+import tagStore from '@/stores/tagStore'
+import articleStore from '@/stores/articleStore'
+import imgStore from '@/stores/imgStore'
 import { ref, computed } from 'vue'
-import { useUsersDataStore } from '@/stores/usersDataStore'
 import staticApp from '@/staticApp'
+import cachedTagStore from '@/stores/cachedTagStore'
 const props = defineProps<{
   msg?: string
   userId: string
@@ -13,61 +14,47 @@ const props = defineProps<{
   p: HTMLParagraphElement
 }>()
 
-const saveUserData = useUsersDataStore().saveUserData
-const idData = useUsersDataStore().getUserById(props.userId)
-const tags: UserTags = idData.tags
+const articleTags = await tagStore.getByIdAndUri(props.userId, props.articleUri)
+const cache = cachedTagStore.get(props.userId)
 const tagName = ref('')
-const currentScore = computed(() => {
-  return tags[tagName.value]?.tagUris[props.articleUri]
-})
 const currentTags = computed(() => {
-  return JSON.stringify(currentTagsObject.value).replace(/\{|\}/g, '')
+  return JSON.stringify(articleTags.tags).replace(/\{|\}/g, '')
 })
-type tagsObject = { [key: string]: number }
-const currentTagsObject = computed(() => {
-  const result: tagsObject = {}
-  for (const tagName in tags) {
-    if (Object.prototype.hasOwnProperty.call(tags, tagName)) {
-      const tag = tags[tagName]
-      if (Object.prototype.hasOwnProperty.call(tag.tagUris, props.articleUri)) {
-        result[tagName] = tag.tagUris[props.articleUri]
-      }
-    }
-  }
-  return result
-})
-async function modify(step: number) {
-  UserData.addModify(idData, tagName.value, step, props.articleUri)
-  const article = await storage.getArticleByUri(props.articleUri)
-  const contents = article ? article.content : []
-  contents.includes(props.content) || contents.push(props.content)
-  await storage.saveArticle({
-    articleUri: props.articleUri,
-    content: contents,
-    id: props.userId,
-    t: Date.now()
-    // tags: currentTagsObject.value
+
+function modify(step: number) {
+  cache.modify(tagName.value, step)
+  articleTags.modify(tagName.value, step)
+  saveArticle()
+  saveImg()
+}
+function saveArticle() {
+  articleStore.get(props.articleUri).then((article) => {
+    article.addContent(props.content)
   })
-  saveUserData(idData)
+}
+function saveImg() {
   const imgEls = props.p.querySelectorAll('img')
   const srcs = []
   for (let index = 0; index < imgEls.length; index++) {
     const imgEl = imgEls[index]
     if (imgEl.src.startsWith('https://www.newsmth.net/nForum/')) {
       const imgUri = imgEl.src.replace(/\/large$/, '')
-      const response = await fetch(imgUri)
-      if (response.status !== 200) {
-        return
-      }
-      const blob = await response.blob()
-      await storage.saveImg({ imgUri: imgUri, data: blob })
+      imgStore.get(imgUri).then(async (img) => {
+        if (!img.imgBlob) {
+          const response = await fetch(imgUri)
+          //TODO 缓存？重定向?
+          if (response.status !== 200) {
+            return
+          }
+          const data = await response.blob()
+          img.addImgData(data)
+        }
+      })
     } else if (
       imgEl.src.startsWith('https://static.newsmth.net/nForum/') ||
       imgEl.src.startsWith('https://static.mysmth.net/nForum/')
     ) {
-      {
-        srcs.push(imgEl.src)
-      }
+      srcs.push(imgEl.src)
     }
   }
   staticApp.openUrl(srcs)
@@ -77,10 +64,12 @@ async function modify(step: number) {
   <div>
     <form @submit.prevent="modify(-1)">
       <input type="text" v-model.trim="tagName" :placeholder="currentTags" />
-      <span>({{ currentScore }})</span>
+      <span>({{ articleTags.tags[tagName] }})</span>
       <button type="button" @click.prevent="modify(1)">赞</button>
       <button type="submit">踩</button>
-      <!-- <button type="button" @click.prevent="del()" v-if="currentScore === 0">清除</button> -->
+      <!-- <button type="button" @click.prevent="del()" v-if="articleTags.tags[tagName] === 0">
+        清除
+      </button> -->
     </form>
   </div>
 </template>

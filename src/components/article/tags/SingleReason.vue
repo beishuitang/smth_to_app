@@ -1,17 +1,16 @@
 <script setup lang="ts">
 import { reactive } from 'vue'
-import storage from '@/scripts/storage'
 
-const props = defineProps<{
+defineProps<{
   uri: string | number
 }>()
 // const href = props.uri.toString()
 const contents = reactive([] as string[])
-storage.getArticleByUri(props.uri as string).then((article) => {
-  article?.content.forEach((c) => {
-    contents.push(c)
-  })
-})
+// storage.get(props.uri as string, 'articleTable').then((article) => {
+//   article?.content.forEach((c) => {
+//     contents.push(c)
+//   })
+// })
 </script>
 
 <template>

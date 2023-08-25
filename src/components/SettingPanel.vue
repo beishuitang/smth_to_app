@@ -26,7 +26,7 @@ function setBaseFontSize(fontSize: number) {
 }
 </script>
 <template>
-  <div id="setting">
+  <div id="setting" v-if="showState.showSetting">
     <div>
       <h3>手机模式<input type="checkbox" v-model="config.onMobile" :disabled="onMobile" /></h3>
     </div>
@@ -100,7 +100,7 @@ function setBaseFontSize(fontSize: number) {
   margin: auto;
   background-color: #f3f5fc;
   padding: 1rem;
-  z-index: 10;
+  z-index: 101;
   height: 100%;
   overflow: scroll;
   /* width: 100%; */
