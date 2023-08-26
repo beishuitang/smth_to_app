@@ -5,6 +5,7 @@ import cachedMajiaStore from './cachedMajiaStore'
 
 class MajiaStore extends LazyStore<Majia> {
   protected afterImport(cache: DataOnly<Majia>[]) {
+    super.afterImport(cache)
     return cachedMajiaStore.importMajias(cache)
   }
   getByID(id1: string, id2: string) {

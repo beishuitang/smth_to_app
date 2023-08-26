@@ -9,9 +9,7 @@ class CachedMajiaStore extends EagerStore<CachedMajias> {
       const majia = datas[index]
       const [id1, id2] = Majia.getIDs(majia)
       const cachedMajias = this.get(id1)
-      if (cachedMajias.m < majia.m) {
-        majia.state ? await cachedMajias.addMajia(id2) : await cachedMajias.delMajia(id2)
-      }
+      majia.state ? await cachedMajias.addMajia(id2) : await cachedMajias.delMajia(id2)
     }
   }
 }
