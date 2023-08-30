@@ -15,7 +15,7 @@ function onBodyMut() {
 function onHashChange(e: HashChangeEvent) {
   bodyLoaded = false
   const last = historyStack[historyStack.length - 1]
-  if (e.oldURL.includes(last.hash)) {
+  if (last && e.oldURL.includes(last.hash)) {
     last.scrollY = window.scrollY
   }
 }
@@ -28,7 +28,7 @@ function isTheSameTopic(hash1: string, hash2: string) {
 function getStackHash() {
   historyStack.pop()
   let hashScrollY = historyStack.pop()
-  while (hashScrollY !== undefined && isTheSameTopic(hashScrollY.hash, location.hash)) {
+  while (hashScrollY && isTheSameTopic(hashScrollY.hash, location.hash)) {
     hashScrollY = historyStack.pop()
   }
   return hashScrollY ? hashScrollY : { hash: '#!mainpage', scrollY: 0 }
@@ -38,7 +38,7 @@ function stepOut() {
   const hashScrollY = getStackHash()
   Object.assign(appStateStore.scrollY, hashScrollY)
   markStepOutLink(location.hash.replace('#!', '').replace(pageReg, ''))
-  location.hash = hashScrollY.hash
+  window.APP.body.open(location.href.replace(/#!.*$/, hashScrollY.hash))
 }
 
 export default {

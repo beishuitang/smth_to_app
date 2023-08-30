@@ -107,6 +107,7 @@ function handleClickEvent(event: Event) {
     link === undefined ||
     link.target === '_blank' ||
     link.host !== config.host ||
+    link.href.match(/[?&]p=\d*($|&)/m) ||
     link.href.endsWith('.json')
   )
     return
