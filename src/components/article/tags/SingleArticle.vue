@@ -10,4 +10,8 @@ const contents = article.content
 <template>
   <p v-for="(content, index) in contents" :key="index" v-html="content"></p>
 </template>
-<style scoped></style>
+<style scoped>
+p {
+  background-image:repeating-radial-gradient(lightgray, transparent 5rem) 
+}
+</style>
