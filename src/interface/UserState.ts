@@ -1,3 +1,4 @@
+import cssUtils from '@/scripts/cssUtils'
 import { Persistence } from './Persistence'
 export class UserState extends Persistence {
   static readonly hideUser = 0b1
@@ -14,6 +15,7 @@ export class UserState extends Persistence {
   }
   switchShowUser() {
     this.state ^= UserState.hideUser
+    cssUtils.updateBlacklistStyle()
     this.save()
   }
   switchShowTag() {

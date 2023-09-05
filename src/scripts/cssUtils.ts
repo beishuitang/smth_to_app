@@ -4,6 +4,7 @@ import '@/assets/smth/nForum.css'
 import '@/assets/smth/pack_rem_link.css'
 import smthScriptConfig from '@/scripts/smthScriptConfig'
 import topicStore from '@/stores/topicStore'
+import stateStore from '@/stores/stateStore'
 export default {
   init: function () {
     if (!smthScriptConfig.onMobile) return
@@ -15,8 +16,10 @@ export default {
     this.initConfigCss()
   },
   styleSheet: {} as HTMLStyleElement,
+  blacklistStyle: {} as HTMLStyleElement,
   initConfigCss() {
     this.styleSheet = document.createElement('style')
+    this.blacklistStyle = document.createElement('style')
     const { mainpageConfig, cssConfig, frameConfig, simplifyConfig } = smthScriptConfig
     const els = mainpageConfig.section.concat(frameConfig.component).concat(simplifyConfig.func)
     let cssText = 'html' + '{font-size:' + cssConfig.fontSize + 'px}'
@@ -25,6 +28,16 @@ export default {
     })
     this.styleSheet.appendChild(document.createTextNode(cssText))
     document.head.appendChild(this.styleSheet)
+    document.head.appendChild(this.blacklistStyle)
+  },
+  updateBlacklistStyle: function () {
+    const list: string[] = stateStore.getBlacklist()
+    let cssText = ''
+    list.forEach((id) => {
+      cssText += `#body table.article[${smthScriptConfig.PROJECT_NAME}-id="${id}"]{display:none}`
+      cssText += `#body table.board-list tr[${smthScriptConfig.PROJECT_NAME}-id="${id}"]{display:none}`
+    })
+    this.blacklistStyle.innerText = cssText
   },
   pxToRem: function () {
     if (!smthScriptConfig.onMobile) return
@@ -41,9 +54,7 @@ export default {
       if (pos <= info.pos) {
         a_el.style.opacity = '0.5'
       }
-      const span_el = document.createElement('span')
-      span_el.innerText = `(${info.pos + 1}/${pos + 1})`
-      a_el.parentNode?.insertBefore(span_el, a_el.nextSibling)
+      a_el.setAttribute('read', `(${info.pos + 1}/${pos + 1})`)
     })
   }
 }

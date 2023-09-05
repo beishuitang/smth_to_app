@@ -59,3 +59,8 @@ html {
   min-width: 5rem;
   min-height: 5rem;
 }
+
+.title_9 a[read]::after {
+  content: attr(read);
+  color: #666;
+}

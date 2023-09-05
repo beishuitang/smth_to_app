@@ -106,11 +106,11 @@ export class EagerStore<T extends tableName> extends ObjectStore<T> {
   exportAll() {
     return Object.values(this.record)
   }
-  init = async () => {
+  async init() {
     const objArr = await this.fetchAll()
-    objArr.forEach((data) => {
+    for (const data of objArr) {
       this.addRecord(this.getRecordKey(data), data)
-    })
+    }
   }
   get(key: string) {
     if (!Object.prototype.hasOwnProperty.call(this.record, key)) {

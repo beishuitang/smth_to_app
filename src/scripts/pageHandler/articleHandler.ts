@@ -1,6 +1,7 @@
 import appcontainer from '../appContainer'
 import { useAppStateStore, type ArticleInfo } from '@/stores/appStateStore'
 import config from '@/scripts/smthScriptConfig'
+import smthScriptConfig from '@/scripts/smthScriptConfig'
 
 const appState = useAppStateStore(appcontainer.pinia).appState
 const aImgsReg = /<a target=.*?><img.*?><\/a>/g
@@ -27,7 +28,7 @@ function fnArticle(articleElement: HTMLTableElement, index: number) {
   const user_a = a_u_name?.querySelector('a')
   const userId = user_a ? user_a.innerText : (<HTMLElement>a_u_name)?.innerText
   const classList = articleElement.classList
-  articleElement.setAttribute('smth-id', userId)
+  articleElement.setAttribute(smthScriptConfig.PROJECT_NAME + '-id', userId)
   const classname = 'simple-article'
   articleElement.addEventListener(
     'dblclick',

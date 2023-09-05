@@ -2,6 +2,7 @@ import config from '@/scripts/smthScriptConfig'
 import { splitName, relayTableAll } from '../commonUtils'
 import { fixEmptyBoard } from '@/scripts/bugHandler'
 import cssUtils from '@/scripts/cssUtils'
+import smthScriptConfig from '@/scripts/smthScriptConfig'
 
 export default {
   handle(bodyEl: HTMLElement) {
@@ -23,10 +24,8 @@ export default {
     for (let index = 0; index < topicTrs.length; index++) {
       const topic_el = topicTrs[index].querySelector<HTMLAnchorElement>('.title_9>a')
       if (topic_el == null) return
-      // const author = topicTrs[index].querySelector('.title_12>a')?.innerHTML ?? ''
-      // if (!usersDataStore.getUserById(author).state.showUser) {
-      // topicTrs[index].style.display = 'none'
-      // }
+      const author = topicTrs[index].querySelector('.title_12>a')?.innerHTML ?? ''
+      topicTrs[index].setAttribute(smthScriptConfig.PROJECT_NAME + '-id', author)
       const middle_els = topicTrs[index].querySelectorAll('.middle')
       const score = middle_els[0].innerHTML
       const like = middle_els[1].innerHTML
