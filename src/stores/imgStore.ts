@@ -3,7 +3,7 @@ import type { Img } from '@/interface/Img'
 import storage from '@/storage/storage'
 import { LazyStore } from '@/stores/ObjectStore'
 
-class ImgStore extends LazyStore<Img> {
+class ImgStore extends LazyStore<'imgTable'> {
   private keys: IDBValidKey[] = []
   protected async beforeImport() {
     this.keys = await storage.getAllKeys(this.tableName)

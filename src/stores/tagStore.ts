@@ -3,7 +3,7 @@ import type { ArticleTags } from '@/interface/ArticleTags'
 import { LazyStore } from '@/stores/ObjectStore'
 import cachedTagStore from './cachedTagStore'
 
-class TagStore extends LazyStore<ArticleTags> {
+class TagStore extends LazyStore<'tagTable'> {
   protected userCache: Record<string, Record<string, ArticleTags>> = {}
   async getByIdAndUri(id: string, uri: string) {
     const articleTags = await this.get(uri)
@@ -30,7 +30,8 @@ class TagStore extends LazyStore<ArticleTags> {
       this.userCache[id][uri] = articleTags
   }
   protected afterImport(cache: DataOnly<ArticleTags>[]) {
+    super.afterImport(cache)
     return cachedTagStore.importArticleTags(cache)
   }
 }
-export default new TagStore('tagTable') as Omit<TagStore, 'get'>
+export default new TagStore('tagTable') 

@@ -1,9 +1,8 @@
 import { EagerStore } from '@/stores/ObjectStore'
-import type { CachedMajias } from '@/interface/CachedMajias'
 import { Majia } from '@/interface/Majia'
 import type { DataOnly } from '@/common/typeUtils'
 
-class CachedMajiaStore extends EagerStore<CachedMajias> {
+class CachedMajiaStore extends EagerStore<'cachedMajiaTable'> {
   async importMajias(datas: DataOnly<Majia>[]) {
     for (let index = 0; index < datas.length; index++) {
       const majia = datas[index]

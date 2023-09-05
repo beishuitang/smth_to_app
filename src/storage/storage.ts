@@ -1,10 +1,22 @@
 import type { DataOnly } from '@/common/typeUtils'
-import type { fileKey, objectType, obj2tableName, obj2indexName, tableName } from './tableInfo'
+import type { fileKey, tableName, tableName2obj, tableName2index } from './tableInfo'
 import { tableInfo, fileTableName, getTableName } from './tableInfo'
 import { toRaw } from 'vue'
 
 let DB: IDBDatabase
+let ready = false
+function waitForDB() {
+  if (ready) return
+  else
+    return new Promise<void>((resolve) => {
+      setTimeout(async () => {
+        await waitForDB()
+        resolve()
+      }, 10)
+    })
+}
 function initDB() {
+  ready = false
   return new Promise<IDBDatabase>((resolve, reject) => {
     const idbOpenRequest = indexedDB.open('newsmthScriptDatabase', 1)
     idbOpenRequest.onerror = () => {
@@ -12,6 +24,7 @@ function initDB() {
     }
     idbOpenRequest.onsuccess = () => {
       DB = idbOpenRequest.result
+      ready = true
       resolve(DB)
     }
     idbOpenRequest.onupgradeneeded = (event) => {
@@ -51,10 +64,13 @@ function getFile<T>(key: fileKey) {
   })
 }
 
-function save(obj: objectType): Promise<unknown>
-function save<T extends objectType>(obj: DataOnly<T>, tableName: obj2tableName<T>): Promise<unknown>
-function save<T extends objectType>(obj: objectType | DataOnly<T>, tableName?: obj2tableName<T>) {
-  const table = tableName ? tableName : getTableName(obj as objectType)
+function save<T extends tableName>(obj: tableName2obj<T>): Promise<unknown>
+function save<T extends tableName>(obj: DataOnly<tableName2obj<T>>, tableName: T): Promise<unknown>
+function save<T extends tableName>(
+  obj: tableName2obj<T> | DataOnly<tableName2obj<T>>,
+  tableName?: T
+) {
+  const table = tableName ? tableName : getTableName(obj as tableName2obj<T>)
   return new Promise((resolve, reject) => {
     obj.u = Date.now()
     const idbRequest = DB.transaction([table], 'readwrite').objectStore(table).put(toRaw(obj))
@@ -63,8 +79,8 @@ function save<T extends objectType>(obj: objectType | DataOnly<T>, tableName?: o
   })
 }
 
-function get<T extends objectType>(tableName: obj2tableName<T>, key: IDBValidKey) {
-  return new Promise<DataOnly<T> | undefined>((resolve, reject) => {
+function get<T extends tableName>(tableName: T, key: IDBValidKey) {
+  return new Promise<DataOnly<tableName2obj<T>> | undefined>((resolve, reject) => {
     const idbRequest = DB.transaction([tableName]).objectStore(tableName).get(key)
     idbRequest.onerror = reject
     idbRequest.onsuccess = function () {
@@ -73,13 +89,13 @@ function get<T extends objectType>(tableName: obj2tableName<T>, key: IDBValidKey
   })
 }
 
-function getByIndexKey<T extends objectType>(
-  tableName: obj2tableName<T>,
-  index: obj2indexName<T>,
+function getByIndexKey<T extends tableName>(
+  tableName: T,
+  index: tableName2index<T>,
   key: IDBValidKey
 ) {
-  return new Promise<DataOnly<T>[]>((resolve, reject) => {
-    const result: DataOnly<T>[] = []
+  return new Promise<DataOnly<tableName2obj<T>>[]>((resolve, reject) => {
+    const result: DataOnly<tableName2obj<T>>[] = []
     const transaction = DB.transaction([tableName])
     const idbRequest = transaction
       .objectStore(tableName)
@@ -99,7 +115,7 @@ function getByIndexKey<T extends objectType>(
   })
 }
 
-function saveAll<T extends objectType>(objects: DataOnly<T>[], tableName: obj2tableName<T>) {
+function saveAll<T extends tableName>(objects: DataOnly<tableName2obj<T>>[], tableName: T) {
   return new Promise((resolve, reject) => {
     const idbTransaction = DB.transaction([tableName], 'readwrite')
     const idbObjectStore = idbTransaction.objectStore(tableName)
@@ -112,8 +128,8 @@ function saveAll<T extends objectType>(objects: DataOnly<T>[], tableName: obj2ta
   })
 }
 
-function getAll<T extends objectType>(tableName: obj2tableName<T>) {
-  return new Promise<DataOnly<T>[]>((resolve, reject) => {
+function getAll<T extends tableName>(tableName: T) {
+  return new Promise<DataOnly<tableName2obj<T>>[]>((resolve, reject) => {
     const idbRequest = DB.transaction([tableName]).objectStore(tableName).getAll()
     idbRequest.onsuccess = function () {
       resolve(idbRequest.result)
@@ -133,6 +149,7 @@ function getAllKeys(tableName: tableName) {
 }
 export default {
   initDB,
+  waitForDB,
   saveFile,
   getFile,
   get,

@@ -5,7 +5,7 @@ import { EagerStore } from '@/stores/ObjectStore'
 import tagStore from './tagStore'
 import storage from '@/storage/storage'
 
-class CachedTagStore extends EagerStore<CachedTags> {
+class CachedTagStore extends EagerStore<'cachedTagTable'> {
   async importArticleTags(datas: DataOnly<ArticleTags>[]) {
     const cache: CachedTags[] = []
     const IDs: string[] = []

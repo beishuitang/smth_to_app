@@ -1,7 +1,6 @@
 import { LazyStore } from '@/stores/ObjectStore'
-import type { Topic } from '@/interface/Topic'
 
-class TopicStore extends LazyStore<Topic> {
+class TopicStore extends LazyStore<'topicTable'> {
   readonly topicReg = /(article\/[\w|.]+\/\d+)(\?p=(\d+))?$/
   constructor() {
     super('topicTable')
