@@ -2,19 +2,15 @@
 import storage from '@/storage/storage'
 import { fileKeys } from '@/storage/tableInfo'
 import ipInfoStore from '@/stores/ipInfoStore'
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 import { info } from '@/scripts/commonUtils'
 const loaded = ref(false)
-const showImport = ref(false)
-const autoDownload = ref(false)
 const installing = ref(false)
 const contentLength = ref(1)
 const receivedLength = ref(0)
-watch(autoDownload, (value) => {
-  if (value) {
-    downloadIpDb()
-  }
-})
+
+const ip = ipInfoStore.getIpInfo('127.0.0.1')
+loaded.value = ip ? true : false
 function downloadIpDb() {
   info(2000, '正在下载安装，请稍后')
   installing.value = true
@@ -38,7 +34,6 @@ function downloadIpDb() {
     })
     .finally(() => {
       installing.value = false
-      autoDownload.value = false
     })
 }
 async function getArrayBuffer(response: Response) {
@@ -69,22 +64,16 @@ async function getArrayBuffer(response: Response) {
 async function saveIpDb(arrayBuffer: ArrayBuffer) {
   await storage.saveFile(arrayBuffer, fileKeys.ipDB)
   info(3, '导入完成,点击“应用”完成操作')
+  loaded.value = true
 }
 </script>
 <template>
   <div>
     <h3>ip地理位置</h3>
-    数据库文件:
-    <span v-if="loaded"> 已安装 </span>
+    <span v-if="loaded"> 数据库文件已安装 </span>
     <span v-if="!loaded">
-      <label :class="{ checked: autoDownload }">
-        下载更新
-        <input type="checkbox" :disabled="installing" v-model="autoDownload" />
-      </label>
-      <label :class="{ checked: showImport }">
-        手动导入
-        <input type="checkbox" :disabled="installing" v-model="showImport" />
-      </label>
+      <span>数据库文件约11M</span>
+      <button :disabled="installing" @click="downloadIpDb">下载安装</button>
       <div v-if="installing">
         正在下载:{{ Math.floor((100 * receivedLength) / contentLength) }}%
       </div>
@@ -92,22 +81,4 @@ async function saveIpDb(arrayBuffer: ArrayBuffer) {
   </div>
 </template>
 
-<style scoped>
-a {
-  text-decoration: underline;
-}
-
-.border-dotted {
-  border: dotted;
-}
-
-label {
-  margin-right: 1rem;
-  display: inline-block;
-  border: outset;
-}
-
-label.checked {
-  border: inset;
-}
-</style>
+<style scoped></style>

@@ -4,8 +4,11 @@ import BackUpImport from './BackUpImport.vue'
 </script>
 
 <template>
-  <BackUpExportVue />
-  <BackUpImport />
+  <div>
+    <h3>备份</h3>
+    <BackUpExportVue />
+    <BackUpImport />
+  </div>
 </template>
 
 <style scoped></style>

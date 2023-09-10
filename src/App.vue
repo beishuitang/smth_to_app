@@ -18,7 +18,7 @@ const info_arr = useAppStateStore().appState.articleInfoArr
     </Teleport>
     <UserPanel />
     <SettingPanel />
-    <div id="articles">
+    <div id="articles" style="display: none;">
       <div class="smth-article" v-for="(info, index) in info_arr" :key="index">
         <Teleport :to="appContainer.articleEls[index].userInfoEl">
           <UserInfo :article-info="info" />

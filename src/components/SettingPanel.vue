@@ -6,7 +6,6 @@ import BackUp from './BackUp.vue'
 import IPDB from './IPDB.vue'
 const showState = useAppStateStore().appState.showState
 const config = reactive(smthScriptConfig)
-const onMobile = true
 const { mainpageConfig, cssConfig, frameConfig, simplifyConfig } = config
 const originFontSize = cssConfig.fontSize
 watch(() => cssConfig.fontSize, setBaseFontSize)
@@ -27,21 +26,17 @@ function setBaseFontSize(fontSize: number) {
 </script>
 <template>
   <div id="setting" v-if="showState.showSetting">
-    <div>
-      <h3>手机模式<input type="checkbox" v-model="config.onMobile" :disabled="onMobile" /></h3>
-    </div>
-    <br />
     <div v-if="config.onMobile">
       <div>
         <h3>显示</h3>
         <div>
           <label v-for="el in frameConfig.component" :key="el.name" :class="{ checked: el.show }">
-            {{ el.name }}
-            <input type="checkbox" :el-css-display="el.el" v-model="el.show" />
+            <input type="checkbox" :el-css-display="el.el" v-model="el.show" />{{ el.name }}
           </label>
+          <!-- <br /> -->
         </div>
       </div>
-      <br />
+      <hr />
       <div>
         <h3>
           字体大小:<span> {{ cssConfig.fontSize }} </span>
@@ -49,45 +44,46 @@ function setBaseFontSize(fontSize: number) {
         <button @click="cssConfig.fontSize--">减小字体</button>
         <button @click="cssConfig.fontSize++">增大字体</button>
       </div>
-      <br />
+      <hr />
       <div>
         <h3>定义长滑动:</h3>
         <span>滑动距离大于<input v-model="config.longSwipeDistance" type="number" />px</span>
       </div>
-      <br />
+      <hr />
       <div>
         <h3>首页</h3>
         <div>
           <label v-for="el in mainpageConfig.section" :key="el.name" :class="{ checked: el.show }">
-            {{ el.name }}
-            <input type="checkbox" :el-css-display="el.el" v-model="el.show" />
+            <input type="checkbox" :el-css-display="el.el" v-model="el.show" />{{ el.name }}
           </label>
         </div>
       </div>
-      <br />
+      <hr />
       <div>
         <h3>精简模式</h3>
         <label :class="{ checked: simplifyConfig.simplify }">
-          精简显示帖子内容
-          <input type="checkbox" v-model="simplifyConfig.simplify" />
+          <input type="checkbox" v-model="simplifyConfig.simplify" />精简显示帖子内容
           <!-- <input type="checkbox" v-model="simplifyConfig.simplify" /> -->
         </label>
+        <br />
         <div>
           <label v-for="el in simplifyConfig.func" :key="el.name" :class="{ checked: el.show }">
-            {{ el.name }}
-            <input type="checkbox" :el-css-display="el.el" v-model="el.show" />
+            <input type="checkbox" :el-css-display="el.el" v-model="el.show" />{{ el.name }}
           </label>
         </div>
       </div>
+    </div>
+    <hr />
+    <IPDB />
+    <hr />
+    <BackUp />
+    <hr />
+    <div>
+      <span class="button" @click="cancle">取消</span>
+      <span class="button" @click="apply">应用</span>
       <br />
     </div>
-    <IPDB />
-    <BackUp />
-    <div style="text-align: right">
-      <span class="button" @click="apply">应用</span>
-      <span> </span>
-      <span class="button" @click="cancle">取消</span>
-    </div>
+    <br />
   </div>
 </template>
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -115,17 +111,7 @@ function setBaseFontSize(fontSize: number) {
   margin: 0.5rem;
   text-align: center;
   text-decoration: none;
-  display: inline-block;
   font-size: 1.2rem;
-}
-
-label {
-  margin-right: 1rem;
-  display: inline-block;
-  border: outset;
-}
-
-label.checked {
-  border: inset;
+  float: right;
 }
 </style>

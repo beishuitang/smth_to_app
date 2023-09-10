@@ -71,17 +71,15 @@ async function mergeBackupData(backup: Backup) {
 }
 </script>
 <template>
-  <div>
-    <button @click="input?.click()">导入备份</button>
-    <input
-      style="display: none"
-      type="file"
-      multiple
-      accept="application/zip"
-      ref="input"
-      v-on:input="importBackup"
-    />
-  </div>
+  <button @click="input?.click()">导入备份</button>
+  <input
+    style="display: none"
+    type="file"
+    multiple
+    accept="application/zip"
+    ref="input"
+    v-on:input="importBackup"
+  />
 </template>
 
 <style scoped></style>

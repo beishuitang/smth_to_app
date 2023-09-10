@@ -64,3 +64,25 @@ html {
   content: attr(read);
   color: #666;
 }
+
+#setting label {
+  margin: 0.3rem 0.5rem;
+  float: left;
+}
+
+#setting hr {
+  clear: both;
+  height: 0.1rem;
+}
+
+#setting br {
+  margin: 0.1rem;
+  clear: both;
+}
+
+#setting button {
+  margin: 0 0.5rem;
+}
+#setting input[type='checkbox'] {
+  vertical-align: baseline;
+}

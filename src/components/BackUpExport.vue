@@ -14,7 +14,15 @@ const state = reactive({
   onPrepare: false
 })
 
-const checkedTables = ref(['articleTable', 'imgTable', 'ipTable'] as tableName[])
+const checkedTables = ref([
+  'articleTable',
+  'imgTable',
+  'ipTable',
+  'likeTable',
+  'majiaTable',
+  'stateTable',
+  'tagTable'
+] as tableName[])
 const dialog = ref<HTMLDialogElement | null>(null)
 
 function getExtensionName(blob: Blob) {
@@ -65,16 +73,15 @@ function saveBackup(blob: Blob) {
 }
 </script>
 <template>
-  <div>
-    <button @click="dialog?.showModal()" :disabled="state.onPrepare">导出备份</button>
-  </div>
+  <button @click="dialog?.showModal()" :disabled="state.onPrepare">导出备份</button>
   <dialog ref="dialog">
     <span v-for="(info, tableName) in tableInfo" :key="tableName">
       <label v-if="!tableName.startsWith('cached')">
-        {{ info.comment }}
-        <input type="checkbox" :value="tableName" v-model="checkedTables" />
+        <input type="checkbox" :value="tableName" v-model="checkedTables" />{{ info.comment }}
       </label>
     </span>
+    <br />
+    <br />
     <div>
       <button @click="exportBackup(false)">取消</button>
       <button @click="exportBackup(true)">确认导出</button>
@@ -82,4 +89,8 @@ function saveBackup(blob: Blob) {
   </dialog>
 </template>
 
-<style scoped></style>
+<style scoped>
+dialog button {
+  float: right;
+}
+</style>
