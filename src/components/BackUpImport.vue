@@ -18,6 +18,7 @@ async function importBackup() {
       await importFile(files[index])
     }
   }
+  info(5, '导入成功!!!')
 }
 function importFile(file: File) {
   return new Promise<void>((resolve, reject) => {

@@ -3,6 +3,7 @@ import { tableInfo } from '@/storage/tableInfo'
 import storage from '@/storage/storage'
 import type { tableName2obj, tableName, tableName2index } from '@/storage/tableInfo'
 import type { DataOnly } from '@/common/typeUtils'
+import { info } from '@/scripts/commonUtils'
 
 export abstract class ObjectStore<T extends tableName> {
   readonly record: Record<string, tableName2obj<T>> = reactive({})
@@ -27,6 +28,7 @@ export abstract class ObjectStore<T extends tableName> {
   protected async beforeImport() {}
   protected async afterImport(cache: DataOnly<tableName2obj<T>>[]) {
     console.log('完成导入' + this.tableName + '数据' + cache.length + '条')
+    info(2, '导入' + this.tableName + '数据' + cache.length + '条')
   }
   protected async checkToImport(obj: DataOnly<tableName2obj<T>>) {
     const obj0 = await this.get(this.getRecordKey(obj))
