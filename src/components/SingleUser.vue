@@ -19,7 +19,7 @@ const showMajiaModifier = ref(false)
 async function majiaFunc(func: 'add' | 'del') {
   const id = tempID.value.trim()
   if (id === '') return
-  const pair = await majiaStore.getByID(props.userId, tempID.value)
+  const pair = await majiaStore.get(props.userId, tempID.value)
   if (func === 'add') {
     if (!pair.state) pair.enable()
     userMajias.addMajia(tempID.value)

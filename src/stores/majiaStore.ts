@@ -8,11 +8,11 @@ class MajiaStore extends LazyStore<'majiaTable'> {
     super.afterImport(cache)
     return cachedMajiaStore.importMajias(cache)
   }
-  getByID(id1: string, id2: string) {
-    return this.get(Majia.createPairID(id1, id2))
-  }
-  get(key: string): Promise<Majia> {
-    throw new Error('不能使用get方法')
+  get(key: string): Promise<Majia>
+  get(id1: string, id2: string): Promise<Majia>
+  get(str: string, id2?: string): Promise<Majia> {
+    const pair = id2 ? Majia.createPairID(str, id2) : str
+    return super.get(pair)
   }
 }
 export default new MajiaStore('majiaTable')

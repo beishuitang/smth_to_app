@@ -14,7 +14,7 @@ const props = defineProps<{
   p: HTMLParagraphElement
 }>()
 
-const articleTags = await tagStore.getByIdAndUri(props.userId, props.articleUri)
+const articleTags = await tagStore.get(props.articleUri, props.userId)
 const cache = cachedTagStore.get(props.userId)
 const tagName = ref('')
 const currentTags = computed(() => {

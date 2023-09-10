@@ -5,10 +5,10 @@ import cachedTagStore from './cachedTagStore'
 
 class TagStore extends LazyStore<'tagTable'> {
   protected userCache: Record<string, Record<string, ArticleTags>> = {}
-  async getByIdAndUri(id: string, uri: string) {
-    const articleTags = await this.get(uri)
-    if (articleTags.id === '') articleTags.id = id
-    else if (articleTags.id !== id) {
+  async get(uri: string, id?: string) {
+    const articleTags = await super.get(uri)
+    if (id && articleTags.id === '') articleTags.id = id
+    else if (id && articleTags.id !== id) {
       throw new Error('文章id和uri不一致!!!')
     }
     this.addToUserCache(articleTags)
@@ -34,4 +34,4 @@ class TagStore extends LazyStore<'tagTable'> {
     return cachedTagStore.importArticleTags(cache)
   }
 }
-export default new TagStore('tagTable') 
+export default new TagStore('tagTable')
