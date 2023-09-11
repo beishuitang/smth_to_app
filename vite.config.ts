@@ -33,8 +33,8 @@ export default defineConfig({
     lib: {
       entry: path.resolve(__dirname, 'src/main.ts'),
       name: 'smth.top',
-      formats: ['es', 'iife','umd'],
-      fileName: (format) => `my-lib.${format}.js`
+      formats: ['iife'],
+      fileName: (format) => `smth_to_app.${format}.js`
     }
   },
   plugins: [vue()],
