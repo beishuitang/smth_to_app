@@ -1,7 +1,11 @@
 import { Persistence } from './Persistence'
 
 export class Article extends Persistence {
-  constructor(public readonly articleUri: string, public readonly content: string[] = []) {
+  constructor(
+    public readonly articleUri: string,
+    public id = '',
+    public readonly content: string[] = []
+  ) {
     super()
   }
 

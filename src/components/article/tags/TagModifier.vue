@@ -28,7 +28,7 @@ function modify(step: number) {
   saveImg()
 }
 function saveArticle() {
-  articleStore.get(props.articleUri).then((article) => {
+  articleStore.get(props.articleUri, props.userId).then((article) => {
     article.addContent(props.content)
   })
 }

@@ -121,3 +121,16 @@ export class EagerStore<T extends tableName> extends ObjectStore<T> {
     return this.record[key]
   }
 }
+
+export class LazyStoreWithID<
+  T extends 'articleTable' | 'tagTable' | 'likeTable'
+> extends LazyStore<T> {
+  async get(key: string, id?: string) {
+    const obj = await super.get(key)
+    if (id && obj.id === '') obj.id = id
+    else if (id && obj.id !== id) {
+      throw new Error('文章id和uri不一致!!!')
+    }
+    return obj
+  }
+}

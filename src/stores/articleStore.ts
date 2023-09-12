@@ -1,3 +1,3 @@
-import { LazyStore } from '@/stores/ObjectStore'
+import { LazyStoreWithID } from '@/stores/ObjectStore'
 
-export default new LazyStore('articleTable')
+export default new LazyStoreWithID('articleTable')

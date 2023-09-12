@@ -11,6 +11,8 @@ import cachedMajiaStore from '@/stores/cachedMajiaStore'
 import stateStore from '@/stores/stateStore'
 import ipInfoStore from '@/stores/ipInfoStore'
 import userIPStore from '@/stores/userIPStore'
+import articleStore from './stores/articleStore'
+import likeStore from './stores/likeStore'
 import imgStore from '@/stores/imgStore'
 import cssUtils from './scripts/cssUtils'
 import eventHandler from './scripts/eventHandler'
@@ -38,6 +40,8 @@ export default {
           tagStore.init(),
           ipInfoStore.init(),
           userIPStore.init(),
+          articleStore.init(),
+          likeStore.init(),
           imgStore.init()
         ])
       })

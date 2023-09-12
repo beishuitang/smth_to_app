@@ -1,16 +1,12 @@
 import type { DataOnly } from '@/common/typeUtils'
 import type { ArticleTags } from '@/interface/ArticleTags'
-import { LazyStore } from '@/stores/ObjectStore'
+import { LazyStoreWithID } from '@/stores/ObjectStore'
 import cachedTagStore from './cachedTagStore'
 
-class TagStore extends LazyStore<'tagTable'> {
+class TagStore extends LazyStoreWithID<'tagTable'> {
   protected userCache: Record<string, Record<string, ArticleTags>> = {}
-  async get(uri: string, id?: string) {
-    const articleTags = await super.get(uri)
-    if (id && articleTags.id === '') articleTags.id = id
-    else if (id && articleTags.id !== id) {
-      throw new Error('文章id和uri不一致!!!')
-    }
+  async get(uri: string, id = '') {
+    const articleTags = await super.get(uri, id)
     this.addToUserCache(articleTags)
     return articleTags
   }
