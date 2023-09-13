@@ -42,7 +42,6 @@ function saveImg() {
       imgStore.get(imgUri).then(async (img) => {
         if (!img.imgBlob) {
           const response = await fetch(imgUri)
-          //TODO 缓存？重定向?
           if (response.status !== 200) {
             return
           }

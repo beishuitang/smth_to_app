@@ -12,9 +12,8 @@ const receivedLength = ref(0)
 const ip = ipInfoStore.getIpInfo('127.0.0.1')
 loaded.value = ip ? true : false
 function downloadIpDb() {
-  info(2000, '正在下载安装，请稍后')
   installing.value = true
-  const url = 'https://www.newsmth.top/static/ip2region.xdb'
+  const url = 'https://cdn.jsdelivr.net/gh/lionsoul2014/ip2region/data/ip2region.xdb'
   fetch(url)
     .then((response) => {
       return getArrayBuffer(response)
@@ -63,7 +62,6 @@ async function getArrayBuffer(response: Response) {
 }
 async function saveIpDb(arrayBuffer: ArrayBuffer) {
   await storage.saveFile(arrayBuffer, fileKeys.ipDB)
-  info(3, '导入完成,点击“应用”完成操作')
   loaded.value = true
 }
 </script>
