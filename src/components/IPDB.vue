@@ -13,7 +13,7 @@ const ip = ipInfoStore.getIpInfo('127.0.0.1')
 loaded.value = ip ? true : false
 function downloadIpDb() {
   installing.value = true
-  const url = 'https://cdn.jsdelivr.net/gh/lionsoul2014/ip2region/data/ip2region.xdb'
+  const url = 'https://fastly.jsdelivr.net/gh/lionsoul2014/ip2region/data/ip2region.xdb'
   fetch(url)
     .then((response) => {
       return getArrayBuffer(response)
