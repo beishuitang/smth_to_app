@@ -2,7 +2,7 @@ export default {
   host: location.host,
   base: location.origin,
   onMobile: true,
-  PROJECT_NAME: 'newsmth_script',
+  PROJECT_NAME: 'smth_to_app',
   PROJECT_CONFIG_STORAGE_KEY: 'newsmth_script_config',
   cssConfig: {
     fontSize: 12
