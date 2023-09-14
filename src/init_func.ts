@@ -17,7 +17,7 @@ import imgStore from '@/stores/imgStore'
 import cssUtils from './scripts/cssUtils'
 import eventHandler from './scripts/eventHandler'
 import dispatcher from './scripts/dispatcher'
-import { keepAlive } from '@/scripts/commonUtils'
+// import { keepAlive } from '@/scripts/commonUtils'
 
 export default {
   dbPrepared: false,
@@ -56,7 +56,7 @@ export default {
     cssUtils.init()
     eventHandler.handleInputEvent()
     this.listen()
-    keepAlive(20)
+    // keepAlive(20)
   },
   listen: function () {
     window.addEventListener('hashchange', (e) => {
