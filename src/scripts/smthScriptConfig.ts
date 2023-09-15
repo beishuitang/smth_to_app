@@ -8,6 +8,7 @@ export default {
     fontSize: 12
   },
   longSwipeDistance: 200,
+  longSwipeDirection: 'up' as 'up' | 'down' | 'none',
   frameConfig: {
     component: [
       { el: '#top_head', name: '顶部', show: true },

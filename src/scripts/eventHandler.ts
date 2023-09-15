@@ -27,7 +27,7 @@ function verticalSwipe(direction: 'up' | 'down', long = false) {
   if (el instanceof HTMLTextAreaElement && el.value.trim() !== '') {
     return
   }
-  if (long && direction === 'down') {
+  if (long && direction === config.longSwipeDirection) {
     stackStore.stepOut()
     return
   }
