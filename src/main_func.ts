@@ -7,6 +7,18 @@ export default {
       return
     }
     window.newsmth_script_loaded = true
+    if (window.unsafeWindow) {
+      Object.defineProperty(window, 'APP', {
+        get() {
+          return window.unsafeWindow?.APP
+        }
+      })
+      Object.defineProperty(window, 'SESSION', {
+        get() {
+          return window.unsafeWindow?.SESSION
+        }
+      })
+    }
     staticApp.init()
     if (location.hostname !== 'www.newsmth.net') {
       return
@@ -28,12 +40,21 @@ export default {
 declare global {
   interface Window {
     newsmth_script_loaded: boolean
-    SESSION: { trigger: (params: string) => void; update: (force: boolean) => void }
-    APP: {
-      body: {
-        open: (url: HTMLAnchorElement | string, target?: string) => void
-        refresh: (noCache?: boolean) => void
-      }
-    }
+    SESSION: SESSION
+    APP: APP
+    unsafeWindow:
+      | {
+          SESSION: SESSION
+          APP: APP
+        }
+      | undefined
+  }
+}
+
+type SESSION = { trigger: (params: string) => void; update: (force: boolean) => void }
+type APP = {
+  body: {
+    open: (url: HTMLAnchorElement | string, target?: string) => void
+    refresh: (noCache?: boolean) => void
   }
 }
