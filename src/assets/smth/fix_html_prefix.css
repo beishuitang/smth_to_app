@@ -344,3 +344,11 @@ body.newsmth-plus #bot_logo img {
 .newsmth-plus .t-btn a {
   height: unset;
 }
+.newsmth-plus #upload_info {
+  position: unset;
+  display: block;
+}
+.newsmth-plus #post_form .post-su .button {
+  margin-left: 2rem;
+  margin-right: 2rem;
+}
