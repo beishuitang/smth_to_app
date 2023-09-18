@@ -5,10 +5,10 @@ export default {
   PROJECT_NAME: 'smth_to_app',
   PROJECT_CONFIG_STORAGE_KEY: 'newsmth_script_config',
   cssConfig: {
-    fontSize: 12
+    fontSize: 13
   },
   longSwipeDistance: 200,
-  longSwipeDirection: 'up' as 'up' | 'down' | 'none',
+  longSwipeDirection: 'down' as 'up' | 'down' | 'none',
   frameConfig: {
     component: [
       { el: '#top_head', name: '顶部', show: true },
