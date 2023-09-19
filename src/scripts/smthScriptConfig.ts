@@ -17,6 +17,7 @@ export default {
   },
   mainpageConfig: {
     section: [
+      { el: '#slider', name: '图片轮播', show: true },
       { el: '#top10', name: '十大热门', show: true },
       { el: '.b_recommend', name: '精彩原创', show: false },
       { el: '#tg_slider', name: '水木团购', show: false },
@@ -35,6 +36,11 @@ export default {
   simplifyConfig: {
     simplify: true,
     func: [
+      {
+        el: '#body>.b-head>span.n-right',
+        name: '分享到微博',
+        show: false
+      },
       {
         el: '.simple-article .a-head .a-func li samp.ico-pos-reply, .simple-article .a-head .a-func li samp.ico-pos-reply ~ a',
         name: '回复',

@@ -256,10 +256,17 @@ iframe,
 }
 
 .newsmth-plus #mp_wrapper .b_recommend {
-  /* height: unset; */
+  height: unset;
   width: unset;
 }
 
+.newsmth-plus #mp_wrapper .b_recommend p {
+  height: unset;
+  width: unset;
+}
+.newsmth-plus .b_recommend span.more {
+  margin-top: unset;
+}
 .newsmth-plus #hotspot > #events_slider > .events_show,
 .newsmth-plus #mp_wrapper > #hotspot > .acts,
 .newsmth-plus #mp_wrapper #hotspot .topics {
@@ -351,4 +358,7 @@ body.newsmth-plus #bot_logo img {
 .newsmth-plus #post_form .post-su .button {
   margin-left: 2rem;
   margin-right: 2rem;
+}
+.newsmth-plus #nforum_tips {
+  font-size: 2rem;
 }
