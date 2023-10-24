@@ -4,6 +4,7 @@ import { useAppStateStore } from '@/stores/appStateStore'
 import { watch, reactive } from 'vue'
 import BackUp from './BackUp.vue'
 import IPDB from './IPDB.vue'
+import CommonTags from './CommonTags.vue'
 const showState = useAppStateStore().appState.showState
 const config = reactive(smthScriptConfig)
 const { mainpageConfig, cssConfig, frameConfig, simplifyConfig } = config
@@ -46,18 +47,6 @@ function setBaseFontSize(fontSize: number) {
       </div>
       <hr />
       <div>
-        <h3>定义长滑动:</h3>
-        <span>滑动距离大于<input v-model="config.longSwipeDistance" type="number" />px</span>
-        <br />
-        <span>返回上一层: </span>
-        <select v-model="config.longSwipeDirection">
-          <option value="up">向上长滑</option>
-          <option value="down">向下长滑</option>
-          <option value="none">无</option>
-        </select>
-      </div>
-      <hr />
-      <div>
         <h3>首页</h3>
         <div>
           <label v-for="el in mainpageConfig.section" :key="el.name" :class="{ checked: el.show }">
@@ -80,6 +69,8 @@ function setBaseFontSize(fontSize: number) {
         </div>
       </div>
     </div>
+    <hr />
+    <CommonTags />
     <hr />
     <IPDB />
     <hr />

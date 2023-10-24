@@ -7,8 +7,6 @@ export default {
   cssConfig: {
     fontSize: 13
   },
-  longSwipeDistance: 200,
-  longSwipeDirection: 'down' as 'up' | 'down' | 'none',
   frameConfig: {
     component: [
       { el: '#top_head', name: '顶部', show: true },
@@ -93,6 +91,13 @@ export default {
       }
     ]
   },
+  customTags: <customTags>{
+    民科: { score: -1, use: true },
+    喷子: { score: -1, use: true },
+    阴阳怪气: { score: -1, use: true },
+    专业: { score: 1, use: true }
+  },
+
   saveConfig() {
     localStorage.setItem(this.PROJECT_CONFIG_STORAGE_KEY, JSON.stringify(this))
   },
@@ -100,5 +105,11 @@ export default {
     const str = localStorage.getItem(this.PROJECT_CONFIG_STORAGE_KEY)
     const config = str ? JSON.parse(str) : {}
     Object.assign(this, config)
+  }
+}
+type customTags = {
+  [name: string]: {
+    score: 1 | -1
+    use: boolean
   }
 }

@@ -9,10 +9,13 @@ export class ArticleTags extends Persistence {
     super()
   }
 
+  del(tagName: string) {
+    delete this.tags[tagName]
+    this.save()
+  }
   modify(tagName: string, step: number) {
     if (!Object.prototype.hasOwnProperty.call(this.tags, tagName)) this.tags[tagName] = 0
     this.tags[tagName] += step
-    if (this.tags[tagName] === 0) delete this.tags[tagName]
     this.save()
   }
 }

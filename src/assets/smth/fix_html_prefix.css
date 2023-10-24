@@ -362,3 +362,16 @@ body.newsmth-plus #bot_logo img {
 .newsmth-plus #nforum_tips {
   font-size: 2rem;
 }
+.newsmth-plus #main_area_top_block {
+  height: unset;
+}
+/* .newsmth-plus #mp_wrapper, */
+.newsmth-plus #top10 {
+  margin-top: 0;
+}
+#quick_text {
+  width: 96%;
+}
+.newsmth-plus .ubb-img-tab li {
+  width: 22%;
+}

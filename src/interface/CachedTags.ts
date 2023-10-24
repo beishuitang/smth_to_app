@@ -32,6 +32,9 @@ export class CachedTags extends Persistence {
         this.modify(tagName, score)
       })
     })
+    this.score = Object.values(this.tags).reduce(function (prev, curr) {
+      return prev + curr
+    }, 0)
     if (save) this.save()
     return this
   }

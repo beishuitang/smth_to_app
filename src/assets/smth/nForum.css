@@ -65,9 +65,17 @@ html {
   color: #666;
 }
 
+.modifier label,
 #setting label {
   margin: 0.3rem 0.5rem;
-  float: left;
+  /* float: left; */
+  display: inline-block;
+}
+.positive {
+  color: green;
+}
+.negative {
+  color: red;
 }
 
 #setting hr {

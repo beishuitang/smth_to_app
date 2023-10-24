@@ -5,6 +5,7 @@ import imgStore from '@/stores/imgStore'
 import { ref, computed } from 'vue'
 import staticApp from '@/staticApp'
 import cachedTagStore from '@/stores/cachedTagStore'
+import smthScriptConfig from '@/scripts/smthScriptConfig'
 const props = defineProps<{
   msg?: string
   userId: string
@@ -14,6 +15,7 @@ const props = defineProps<{
   p: HTMLParagraphElement
 }>()
 
+const commonTags = smthScriptConfig.customTags
 const articleTags = await tagStore.get(props.articleUri, props.userId)
 const cache = cachedTagStore.get(props.userId)
 const tagName = ref('')
@@ -21,6 +23,11 @@ const currentTags = computed(() => {
   return JSON.stringify(articleTags.tags).replace(/\{|\}/g, '')
 })
 
+async function del() {
+  articleTags.del(tagName.value)
+  const articles = await tagStore.getByID(props.userId)
+  cache.recompute(Object.values(articles))
+}
 function modify(step: number) {
   cache.modify(tagName.value, step)
   articleTags.modify(tagName.value, step)
@@ -60,16 +67,43 @@ function saveImg() {
 }
 </script>
 <template>
-  <div>
+  <div class="modifier">
+    <div class="commonTags">
+      <span v-for="(info, name) in commonTags" :key="name">
+        <label
+          v-if="info.use"
+          :class="{ positive: info.score === 1, negative: info.score === -1 }"
+          @click="
+          () => {
+            tagName=name as string
+            modify(info.score)
+          }
+        "
+        >
+          {{ name }}
+        </label>
+      </span>
+    </div>
     <form @submit.prevent="modify(-1)">
       <input type="text" v-model.trim="tagName" :placeholder="currentTags" />
       <span>({{ articleTags.tags[tagName] }})</span>
-      <button type="button" @click.prevent="modify(1)">赞</button>
-      <button type="submit">踩</button>
-      <!-- <button type="button" @click.prevent="del()" v-if="articleTags.tags[tagName] === 0">
+      <button type="button" @click.prevent="modify(1)" class="positive">赞</button>
+      <button type="submit" class="negative">踩</button>
+      <button
+        type="button"
+        @click.prevent="del()"
+        :disabled="articleTags.tags[tagName] === undefined"
+      >
         清除
-      </button> -->
+      </button>
     </form>
   </div>
 </template>
-<style scoped></style>
+<style scoped>
+.modifier {
+  margin: 1rem 0.5rem;
+}
+.commonTags::before {
+  content: '常用标签:';
+}
+</style>
