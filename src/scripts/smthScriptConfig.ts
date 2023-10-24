@@ -1,4 +1,6 @@
+import version from '@/version'
 export default {
+  version: 0,
   host: location.host,
   base: location.origin,
   onMobile: true,
@@ -104,7 +106,11 @@ export default {
   init() {
     const str = localStorage.getItem(this.PROJECT_CONFIG_STORAGE_KEY)
     const config = str ? JSON.parse(str) : {}
-    Object.assign(this, config)
+    if (config.version === version.version) Object.assign(this, config)
+    else {
+      this.version = version.version
+      this.saveConfig()
+    }
   }
 }
 type customTags = {

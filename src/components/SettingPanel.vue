@@ -27,6 +27,7 @@ function setBaseFontSize(fontSize: number) {
 </script>
 <template>
   <div id="setting" v-if="showState.showSetting">
+    <span id="smth_version">{{ config.version }}</span>
     <div v-if="config.onMobile">
       <div>
         <h3>显示</h3>
@@ -100,6 +101,10 @@ function setBaseFontSize(fontSize: number) {
   /* width: 100%; */
 }
 
+#smth_version {
+  float: right;
+  color: gray;
+}
 .button {
   background-color: #4caf50;
   /* Green */
