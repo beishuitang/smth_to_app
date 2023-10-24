@@ -17,6 +17,7 @@ import imgStore from '@/stores/imgStore'
 import cssUtils from './scripts/cssUtils'
 import eventHandler from './scripts/eventHandler'
 import dispatcher from './scripts/dispatcher'
+import nForum from './scripts/nForum.js'
 // import { keepAlive } from '@/scripts/commonUtils'
 
 export default {
@@ -51,11 +52,15 @@ export default {
       })
   },
   initDom: function () {
+    if (history.scrollRestoration) {
+      history.scrollRestoration = 'manual'
+    }
     this.bodyElement = document.querySelector('#body') as HTMLElement
     this.bodyElement.childElementCount !== 0 && this.bodyMutCallback()
     cssUtils.init()
     eventHandler.handleInputEvent()
     this.listen()
+    nForum.fix()
     // keepAlive(20)
   },
   listen: function () {

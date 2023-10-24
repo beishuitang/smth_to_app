@@ -42,10 +42,12 @@ declare global {
     newsmth_script_loaded: boolean
     SESSION: SESSION
     APP: APP
+    Backbone: Backbone
     unsafeWindow:
       | {
           SESSION: SESSION
           APP: APP
+          Backbone: Backbone
         }
       | undefined
   }
@@ -56,5 +58,16 @@ type APP = {
   body: {
     open: (url: HTMLAnchorElement | string, target?: string) => void
     refresh: (noCache?: boolean) => void
+  }
+}
+type Backbone = {
+  history: {
+    navigate: (
+      hash: string,
+      option: {
+        trigger: boolean
+        replace: boolean
+      }
+    ) => void
   }
 }
