@@ -65,6 +65,10 @@ export default {
   },
   listen: function () {
     window.addEventListener('hashchange', (e) => {
+      if (e.oldURL.replace(/[?&]p=1/, '') === e.newURL.replace(/[?&]p=1/, '')) {
+        history.back()
+        return
+      }
       this.appStateStore.onHashChange()
       topicStore.onHashChange(e)
       stackStore.onHashChange(e)
@@ -83,13 +87,8 @@ export default {
     this.appStateStore.onBodyMut()
     stackStore.onBodyMut()
     cssUtils.pxToRem()
+    document.querySelector('#c_m')?.insertAdjacentHTML('beforebegin', '<br/>')
     dispatcher.dispatch(this.bodyElement)
-    const notices = document.querySelectorAll('#notice')
-    if (notices.length == 1) {
-      notices[0].parentElement?.appendChild(notices[0].cloneNode(true))
-    } else if (notices.length == 2) {
-      notices[1].innerHTML = notices[0].innerHTML
-    }
     this.bodyElement.style.display = 'block'
     const hashScrollY = this.appStateStore.scrollY
     if (hashScrollY.hash === location.hash) {
