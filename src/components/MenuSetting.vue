@@ -23,6 +23,11 @@ menuEl.addEventListener('click', (event) => {
     hashScrollY.scrollY = window.scrollY
     window.SESSION.trigger('logout')
     savePassword(menuEl.querySelector<HTMLInputElement>('#u_login_cookie')?.checked)
+  } else if (el instanceof HTMLLIElement) {
+    const links = el.querySelectorAll('a')
+    if (links.length !== 1) return
+    event.stopPropagation()
+    links[0].click()
   }
 })
 function savePassword(save: boolean | undefined) {
