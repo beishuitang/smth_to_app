@@ -375,3 +375,14 @@ body.newsmth-plus #bot_logo img {
 .newsmth-plus .ubb-img-tab li {
   width: 22%;
 }
+
+.newsmth-plus .mbar {
+  display: none;
+}
+.newsmth-plus .m-table .title_1 {
+  width: 3rem;
+  text-align: center;
+}
+.newsmth-plus .m-table td.title_4 {
+  width: 8rem;
+}

@@ -5,6 +5,7 @@ import boardHandler from './pageHandler/boardHandler'
 import { useAppStateStore } from '@/stores/appStateStore'
 import appContainer from './appContainer'
 import { info } from './commonUtils'
+import topicHandler from './pageHandler/topicHandler'
 export default {
   appStore: useAppStateStore(appContainer.pinia),
   dispatch: function (bodyElement: HTMLElement) {
@@ -38,6 +39,9 @@ export default {
         break
       case 'board':
         boardHandler.handle(bodyElement)
+        break
+      case 'topic':
+        topicHandler.handle(bodyElement)
         break
       default:
         break
