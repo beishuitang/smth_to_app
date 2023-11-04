@@ -2,6 +2,7 @@ import { useAppStateStore } from '@/stores/appStateStore'
 import topicStore from '@/stores/topicStore'
 import appContainer from './appContainer'
 import config from './smthScriptConfig'
+import pageLoader from './pageLoader'
 
 const appStore = useAppStateStore(appContainer.pinia)
 export default {
@@ -18,6 +19,10 @@ function verticalSwipe(direction: 'up' | 'down') {
     return
   }
   if (appStore.appState.mainHash === 'mainpage') {
+    return
+  }
+  if (appStore.appState.mainHash === 'article') {
+    pageLoader.onSwipe(direction)
     return
   }
   const el = document.activeElement
