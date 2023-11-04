@@ -40,20 +40,10 @@ export const useAppStateStore = defineStore('appStateStore', () => {
   }
   function onBodyMut() {
     appState.showState.state = 0
+    appState.articleInfoArr.length = 0
   }
   function init() {
     onHashChange()
-    for (let index = 0; index < 10; index++) {
-      appState.articleInfoArr.push({
-        userId: '',
-        articleId: '',
-        content: '',
-        p: {} as HTMLParagraphElement,
-        showModifier: false,
-        ip: '',
-        articleUri: '//'
-      })
-    }
   }
   return {
     scrollY,
@@ -72,4 +62,7 @@ export interface ArticleInfo {
   showModifier: boolean
   ip: string
   articleUri: string
+  modifierSwitchEl: HTMLElement
+  userDataBundleEl: HTMLElement
+  userInfoEl: HTMLElement
 }
