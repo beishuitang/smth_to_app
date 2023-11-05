@@ -47,12 +47,12 @@ async function addPage(direction: 'up' | 'down') {
   if (!doc) return
   const content = doc?.querySelector('.b-content')
   const t_pre = doc.querySelector('.t-pre')
-  const t_pre_bottom = doc.querySelector('.t-pre-bottom')
+  const t_pre_bottom = doc.querySelector('body>.t-pre-bottom')
   if (!content || !t_pre || !t_pre_bottom) return
   dispatcher.dispatch(doc?.body)
   document.querySelector('.b-content')?.append(...content.children)
   // document.querySelector('.t-pre')?.replaceChildren(...t_pre.children)
-  document.querySelector('.t-pre-bottom')?.replaceChildren(...t_pre_bottom.children)
+  document.querySelector('#body>.t-pre-bottom')?.replaceChildren(...t_pre_bottom.children)
 }
 function getUrl(next: boolean) {
   const els = document.querySelectorAll<HTMLAnchorElement>('.page-main a')
