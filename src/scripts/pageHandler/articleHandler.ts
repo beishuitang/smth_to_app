@@ -8,12 +8,12 @@ const aImgsReg = /<a target=.*?><img.*?><\/a>/g
 export default {
   handle: function (bodyElement: HTMLElement) {
     const els = bodyElement.querySelectorAll('.article')
-    els.forEach((el, index) => {
-      fnArticle(el as HTMLTableElement, index)
+    els.forEach((el) => {
+      fnArticle(el as HTMLTableElement)
     })
   }
 }
-function fnArticle(articleElement: HTMLTableElement, index: number) {
+function fnArticle(articleElement: HTMLTableElement) {
   const a_content = articleElement.querySelector('.a-content')
   const a_func = articleElement.querySelector('.a-func')
   const a_pos = articleElement.querySelector('.a-pos')
@@ -54,7 +54,13 @@ function fnArticle(articleElement: HTMLTableElement, index: number) {
   const content =
     config.onMobile && config.simplifyConfig.simplify ? pageArticleSimplify(p_el) : p_el.innerHTML
   const ip = getPageIp(articleElement)
+  const modifierSwitchEl = document.createElement('li')
+  const userDataBundleEl = document.createElement('div')
+  const userInfoEl = document.createElement('a')
   const articleInfo: ArticleInfo = {
+    modifierSwitchEl: modifierSwitchEl,
+    userDataBundleEl: userDataBundleEl,
+    userInfoEl: userInfoEl,
     userId: userId,
     articleId: articleId,
     content: content,
@@ -63,9 +69,9 @@ function fnArticle(articleElement: HTMLTableElement, index: number) {
     ip: ip,
     articleUri: articleUri
   }
-  Object.assign(appState.articleInfoArr[index], articleInfo)
-  a_content.insertBefore(appcontainer.articleEls[index].userDataBundleEl, a_content.firstChild)
-  a_func.appendChild(appcontainer.articleEls[index].modifierSwitchEl)
+  appState.articleInfoArr.push(articleInfo)
+  a_content.insertBefore(userDataBundleEl, a_content.firstChild)
+  a_func.appendChild(modifierSwitchEl)
 
   if (config.onMobile) {
     const li = document.createElement('li')
@@ -73,9 +79,9 @@ function fnArticle(articleElement: HTMLTableElement, index: number) {
     li.appendChild(a_u_name)
     a_func.insertBefore(li, a_func.firstChild)
     a_func.appendChild(a_pos)
-    li.appendChild(appcontainer.articleEls[index].userInfoEl)
+    li.appendChild(userInfoEl)
   } else {
-    a_u_name.appendChild(appcontainer.articleEls[index].userInfoEl)
+    a_u_name.appendChild(userInfoEl)
   }
 }
 

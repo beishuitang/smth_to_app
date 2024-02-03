@@ -19,10 +19,13 @@ class TopicStore extends LazyStore<'topicTable'> {
       return
     }
     const pos = parseInt(a_names[a_names.length - 1].name.substr(1))
+    const p = parseInt(m[3] ? m[3] : '1')
+    const preEl = document.querySelector<HTMLElement>(`a[name=a${(p - 1) * 10}]`)
+    const offset = preEl ? preEl.offsetTop : 0
     const topicData = {
-      p: parseInt(m[3] ? m[3] : '1'),
+      p: p,
       pos: pos,
-      scrollY: window.scrollY
+      scrollY: window.scrollY - offset
     }
     this.get(m[1]).then((topic) => {
       topic.update(topicData)

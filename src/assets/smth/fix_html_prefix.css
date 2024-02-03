@@ -155,6 +155,7 @@ html body.newsmth-plus {
 
 .newsmth-plus .b-content {
   padding: unset;
+  position: relative;
 }
 
 .newsmth-plus #bot_foot {

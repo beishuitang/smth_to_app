@@ -2,6 +2,7 @@ import { useAppStateStore } from '@/stores/appStateStore'
 import topicStore from '@/stores/topicStore'
 import appContainer from './appContainer'
 import config from './smthScriptConfig'
+import pageLoader from './pageLoader'
 
 const appStore = useAppStateStore(appContainer.pinia)
 export default {
@@ -18,6 +19,10 @@ function verticalSwipe(direction: 'up' | 'down') {
     return
   }
   if (appStore.appState.mainHash === 'mainpage') {
+    return
+  }
+  if (appStore.appState.mainHash === 'article') {
+    pageLoader.onSwipe(direction)
     return
   }
   const el = document.activeElement
@@ -76,6 +81,10 @@ function handleEvent(event: Event) {
 function handleClickEvent(event: Event) {
   const el = event.target
   if (!(el instanceof HTMLElement)) return
+  if (el.nodeName === 'TD') {
+    el.querySelector('a')?.click()
+    return
+  }
   let link: HTMLAnchorElement | undefined
   const path = event.composedPath()
   const length = Math.min(path.length, 3)
