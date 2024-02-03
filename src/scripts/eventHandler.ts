@@ -81,6 +81,10 @@ function handleEvent(event: Event) {
 function handleClickEvent(event: Event) {
   const el = event.target
   if (!(el instanceof HTMLElement)) return
+  if (el.nodeName === 'TD') {
+    el.querySelector('a')?.click()
+    return
+  }
   let link: HTMLAnchorElement | undefined
   const path = event.composedPath()
   const length = Math.min(path.length, 3)
